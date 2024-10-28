@@ -1,15 +1,15 @@
 services:
-    user-service:
-        container_name: user-service
-        build:
-            context: ./
-            dockerfile: ./backend/user-service/Dockerfile.dev
-        ports:
-            - '3000:3000'
-        environment:
-            DATABASE_URL: 'postgres://postgres:postgres@user-service-db:5432/user_db'
-        depends_on:
-            - user-service-db
+    # user-service:
+    #     container_name: user-service
+    #     build:
+    #         context: ./
+    #         dockerfile: ./backend/user-service/Dockerfile.dev
+    #     ports:
+    #         - '3000:3000'
+    #     environment:
+    #         DATABASE_URL: 'postgres://postgres:postgres@user-service-db:5432/user_db'
+    #     depends_on:
+    #         - user-service-db
 
         # auth-service:
         #     container_name: auth-service
@@ -47,29 +47,31 @@ services:
         #     depends_on:
         #         - product-service-db
 
-        # payment-service:
-        #     container_name: payment-service
-        #     build:
-        #         context: ./backend/payment-service
-        #         dockerfile: Dockerfile
-        #     ports:
-        #         - '4005:4000'
-        #     environment:
-        #         DATABASE_URL: 'postgres://postgres:postgres@payment-service-db:5432/payment-service'
-        #     depends_on:
-        #         - payment-service-db
+        payment-service:
+            container_name: payment-service
+            build:
+                context: ./
+                dockerfile: ./backend/payment-service/Dockerfile.dev
+            ports:
+                - '3005:3000'
+            environment:
+                DATABASE_URL: 'postgres://postgres:postgres@payment-service-db:5432/payment-service'
+            volumes:
+                - ./backend/payment-service:/home/node/app
+            depends_on:
+                - payment-service-db
 
-    user-service-db:
-        container_name: user-service-db
-        image: postgres:latest
-        ports:
-            - '5431:5432'
-        environment:
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_DB: ${POSTGRES_DB_USER}
-        volumes:
-            - user-service-db-data:/var/lib/postgresql/data
+    # user-service-db:
+    #     container_name: user-service-db
+    #     image: postgres:latest
+    #     ports:
+    #         - '5431:5432'
+    #     environment:
+    #         POSTGRES_USER: ${POSTGRES_USER}
+    #         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    #         POSTGRES_DB: ${POSTGRES_DB_USER}
+    #     volumes:
+    #         - user-service-db-data:/var/lib/postgresql/data
 
         # auth-service-db:
         #     container_name: auth-service-db
@@ -107,17 +109,17 @@ services:
         #     volumes:
         #         - product-service-db-data:/var/lib/postgresql/data
 
-        # payment-service-db:
-        #     container_name: payment-service-db
-        #     image: postgres:latest
-        #     ports:
-        #         - '5435:5432'
-        #     environment:
-        #         POSTGRES_USER: ${ POSTGRES_USER }
-        #         POSTGRES_PASSWORD: ${ POSTGRES_PASSWORD }
-        #         POSTGRES_DB: ${ POSTGRES_DB_PAYMENT }
-        #     volumes:
-        #         - payment-service-db-data:/var/lib/postgresql/data
+        payment-service-db:
+            container_name: payment-service-db
+            image: postgres:latest
+            ports:
+                - '5435:5432'
+            environment:
+                POSTGRES_USER: ${POSTGRES_USER}
+                POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+                POSTGRES_DB: ${POSTGRES_DB_PAYMENT}
+            volumes:
+                - payment-service-db-data:/var/lib/postgresql/data
 volumes:
     user-service-db-data:
     auth-service-db-data:
