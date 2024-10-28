@@ -15,10 +15,10 @@ WORKDIR /home/node/app
 ENV TZ=Europe/Paris
 
 # Copy the rest of the application code to the container
-COPY ./backend/user-service ./
+COPY ./backend/product-service ./
 
 # Expose the port the app runs on
-EXPOSE 3001
+EXPOSE 3004
 
 # Run the application
 # CMD ["npm", "run", "dev"]
