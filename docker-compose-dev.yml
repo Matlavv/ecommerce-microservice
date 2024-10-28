@@ -25,29 +25,43 @@ services:
         volumes:
             - user-service-db-data:/var/lib/postgresql/data
 
-    product-service:
-        container_name: product-service
+    # product-service:
+    #     container_name: product-service
+    #     build:
+    #         context: ./
+    #         dockerfile: ./backend/product-service/Dockerfile.dev
+    #     ports:
+    #         - '3003:3003'
+    #     environment:
+    #         DATABASE_URL: 'postgres://postgres:postgres@product-service-db:5432/product_db'
+    #     depends_on:
+    #         - product-service-db
+
+    # product-service-db:
+    #     container_name: product-service-db
+    #     image: postgres:latest
+    #     ports:
+    #         - '5432:5433'
+    #     environment:
+    #         POSTGRES_USER: ${POSTGRES_USER}
+    #         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    #         POSTGRES_DB: ${POSTGRES_DB_USER}
+    #     volumes:
+    #         - product-service-db-data:/var/lib/postgresql/data
+
+    auth-service:
+        container_name: auth-service
         build:
             context: ./
-            dockerfile: ./backend/product-service/Dockerfile.dev
+            dockerfile: ./backend/auth-service/docker/Dockerfile.dev
         ports:
-            - '3003:3003'
+            - '3005:3005'
         environment:
-            DATABASE_URL: 'postgres://postgres:postgres@product-service-db:5432/product_db'
+            DATABASE_URL: 'postgres://postgres:postgres@user-service-db:5432/auth_db'
         depends_on:
-            - product-service-db
-
-    product-service-db:
-        container_name: product-service-db
-        image: postgres:latest
-        ports:
-            - '5432:5433'
-        environment:
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_DB: ${POSTGRES_DB_USER}
+            - auth-service-db
         volumes:
-            - product-service-db-data:/var/lib/postgresql/data
+            - ./backend/auth-service:/home/node/app
 
 volumes:
     user-service-db-data:

@@ -1,11 +1,14 @@
+import dotenv from 'dotenv';
 import express from 'express';
+import authRoutes from './routes/authRoutes';
 
-const app = express();
+dotenv.config();
 const PORT = process.env.PORT || 3005;
 
-app.get('/', (req, res) => {
-    res.send('Server is running');
-});
+const app = express();
+app.use(express.json());
+
+app.use('/auth', authRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
