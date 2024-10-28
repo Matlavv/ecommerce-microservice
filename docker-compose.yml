@@ -2,8 +2,8 @@ services:
     user-service:
         container_name: user-service
         build:
-            context: ./backend/user-service
-            dockerfile: Dockerfile
+            context: ./
+            dockerfile: ./backend/user-service/Dockerfile.dev
         ports:
             - '4001:4000'
         environment:
