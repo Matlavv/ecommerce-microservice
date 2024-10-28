@@ -4,10 +4,8 @@ services:
         build:
             context: ./
             dockerfile: ./backend/user-service/Dockerfile.dev
-        env-file:
-            - .env
         ports:
-            - '4001:4000'
+            - '3000:3000'
         environment:
             DATABASE_URL: 'postgres://postgres:postgres@user-service-db:5432/user_db'
         depends_on:
