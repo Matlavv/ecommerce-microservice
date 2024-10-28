@@ -5,11 +5,13 @@ services:
             context: ./
             dockerfile: ./backend/user-service/Dockerfile.dev
         ports:
-            - '4001:4000'
+            - '3000:3000'
         environment:
             DATABASE_URL: 'postgres://postgres:postgres@user-service-db:5432/user_db'
         depends_on:
             - user-service-db
+        volumes:
+            - ./backend/user-service:/home/node/app
 
         # auth-service:
         #     container_name: auth-service
