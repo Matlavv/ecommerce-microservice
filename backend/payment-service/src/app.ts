@@ -37,4 +37,14 @@ app.post('/create-payment-intent', async (req: Request, res: Response): Promise<
   }
 });
 
-export default app;  
+app.get('/payments', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const payments = await prisma.payment.findMany();
+    res.status(200).json(payments);
+  } catch (error) {
+    console.error('Error retrieving payments:', error);
+    res.status(500).json({ error: 'Internal Server Error', message: (error as Error).message });
+  }
+});
+
+export default app;
