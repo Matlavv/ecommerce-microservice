@@ -12,6 +12,9 @@ services:
             - ./backend/payment-service:/home/node/app
         depends_on:
             - payment-service-db
+            - user-service-db
+        volumes:
+            - ./backend/user-service:/home/node/app
 
     payment-service-db:
         container_name: payment-service-db
@@ -24,9 +27,31 @@ services:
             POSTGRES_DB: ${POSTGRES_DB_PAYMENT}
         volumes:
             - payment-service-db-data:/var/lib/postgresql/data
+
+    product-service:
+        container_name: product-service
+        build:
+            context: ./
+            dockerfile: ./backend/product-service/Dockerfile.dev
+        ports:
+            - '3003:3003'
+        environment:
+            DATABASE_URL: 'postgres://postgres:postgres@product-service-db:5432/product_db'
+        depends_on:
+            - product-service-db
+
+    product-service-db:
+        container_name: product-service-db
+        image: postgres:latest
+        ports:
+            - '5432:5433'
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB_USER}
+        volumes:
+            - product-service-db-data:/var/lib/postgresql/data
+
 volumes:
     user-service-db-data:
-    auth-service-db-data:
-    cart-service-db-data:
     product-service-db-data:
-    payment-service-db-data:
