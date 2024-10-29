@@ -34,9 +34,11 @@ services:
             context: ./
             dockerfile: ./backend/product-service/Dockerfile.dev
         ports:
-            - '3003:3003'
+            - '3004:3004'
         environment:
-            DATABASE_URL: 'postgres://postgres:postgres@product-service-db:5432/product_db'
+            DATABASE_URL: 'postgres://postgres:postgres@product-service-db:5432/product-service'
+        volumes:
+            - ./backend/product-service:/home/node/app
         depends_on:
             - product-service-db
 
@@ -44,11 +46,11 @@ services:
         container_name: product-service-db
         image: postgres:latest
         ports:
-            - '5432:5433'
+            - '5434:5432'
         environment:
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_DB: ${POSTGRES_DB_USER}
+            POSTGRES_DB: ${POSTGRES_DB_PRODUCT}
         volumes:
             - product-service-db-data:/var/lib/postgresql/data
 
