@@ -13,8 +13,6 @@ services:
         depends_on:
             - payment-service-db
             - user-service-db
-        volumes:
-            - ./backend/user-service:/home/node/app
 
     payment-service-db:
         container_name: payment-service-db
