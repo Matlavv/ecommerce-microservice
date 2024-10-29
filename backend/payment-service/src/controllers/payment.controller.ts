@@ -4,6 +4,44 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+/**
+ * @swagger
+ * /create-payment-intent:
+ *   post:
+ *     summary: Créer une intention de paiement
+ *     tags: [Payments]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               amount:
+ *                 type: integer
+ *                 example: 1000
+ *               currency:
+ *                 type: string
+ *                 example: usd
+ *     responses:
+ *       201:
+ *         description: Intention de paiement créée
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 amount:
+ *                   type: integer
+ *                 currency:
+ *                   type: string
+ *       400:
+ *         description: Paramètre manquant
+ *       500:
+ *         description: Erreur interne du serveur
+ */
 export const createPaymentIntentHandler = async (req: Request, res: Response) => {
     const { amount, currency } = req.body;
 
@@ -22,6 +60,38 @@ export const createPaymentIntentHandler = async (req: Request, res: Response) =>
     }
 };
 
+/**
+ * @swagger
+ * /payments:
+ *   get:
+ *     summary: Récupérer tous les paiements
+ *     tags: [Payments]
+ *     responses:
+ *       200:
+ *         description: Liste des paiements
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   stripePaymentId:
+ *                     type: string
+ *                   amount:
+ *                     type: integer
+ *                   currency:
+ *                     type: string
+ *                   status:
+ *                     type: boolean
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *       500:
+ *         description: Erreur interne du serveur
+ */
 export const getPaymentsHandler = async (_: Request, res: Response) => {
     try {
         const payments = await prisma.payment.findMany();

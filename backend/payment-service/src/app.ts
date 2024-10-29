@@ -1,11 +1,17 @@
 import express from 'express';
-import dotenv from 'dotenv';
+import { setupSwagger } from '../swaggerConfig';
 import paymentRoutes from './routes/payment.route';
-
-dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(paymentRoutes);
+
+setupSwagger(app);
+
+app.use('/api', paymentRoutes);
+
+const PORT = process.env.PORT || 3005;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
 
 export default app;
