@@ -1,18 +1,28 @@
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import prisma from '../config/prismaClient';
+import * as jwt from 'jsonwebtoken';
+import { PrismaClient } from '@prisma/client';
+import { JWT_SECRET } from '../config/secrets';
 
-const JWT_SECRET = process.env.JWT_SECRET ;
+export const login = async (email: string, password: string): Promise<string> => {
+    if (!email || !password) {
+        throw new Error('Email and password are required');
+    }
 
-export async function login(email: string, password: string): Promise<string> {
+    const user = await PrismaClient.user.findUnique({ where: { email: email } });
+    if (!user) {
+        throw new Error('Invalid credentials');
+    }
 
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    throw new Error('Invalid credentials');
-  }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+        throw new Error('Invalid credentials');
+    }
 
-  const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
-    expiresIn: '3h',
-  });
-  return token;
-}
+    if (!user || !isPasswordValid) {
+        throw new Error('Invalid credentials');
+    }
+
+    const token = jwt.sign({ userId: user.Id }, JWT_SECRET, { expiresIn: '4h' });
+
+    return token;
+};

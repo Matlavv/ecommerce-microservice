@@ -1,9 +1,7 @@
-import dotenv from 'dotenv';
 import express from 'express';
-import authRoutes from './routes/authRoutes';
+import authRoutes from './routes/auth';
 
-dotenv.config();
-const PORT = process.env.PORT || 3005;
+import { PORT } from './config/secrets';
 
 const app = express();
 app.use(express.json());
