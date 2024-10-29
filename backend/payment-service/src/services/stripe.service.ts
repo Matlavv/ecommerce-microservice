@@ -30,6 +30,7 @@ export const savePaymentToDatabase = async (paymentIntent: Stripe.PaymentIntent)
                 stripePaymentId: paymentIntent.id,
                 amount: paymentIntent.amount,
                 currency: paymentIntent.currency,
+                status: paymentIntent.status === 'succeeded',
             },
         });
         console.log('Payment saved to database:', payment);

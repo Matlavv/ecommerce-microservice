@@ -5,7 +5,15 @@ meta {
 }
 
 post {
-  url: 
-  body: none
+  url: http://localhost:3005/create-payment-intent
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "amount": 1000,
+    "currency": "usd"
+  }
+  
 }
