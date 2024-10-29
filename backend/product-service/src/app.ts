@@ -1,11 +1,20 @@
 import express from 'express';
+
+// ROUTES IMPORT
 import ProductRoute from './routes/product.route';
+
+// SWAGGER IMPORT
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from '../swagger';
 
 const app = express();
 app.use(express.json());
 
+
 // ROUTES
 app.use('/product', ProductRoute);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 app.get('/', (req, res) => {
     res.send('[Product] Server is running!');
