@@ -7,12 +7,11 @@ services:
         ports:
             - '3005:3000'
         environment:
-            DATABASE_URL: 'postgres://postgres:postgres@payment-service-db:5432/payment-service'
+            DATABASE_URL: 'postgres://postgres:postgres@payment-service-db:5435/payment-service'
         volumes:
             - ./backend/payment-service:/home/node/app
         depends_on:
             - payment-service-db
-            - user-service-db
 
     payment-service-db:
         container_name: payment-service-db
@@ -34,7 +33,7 @@ services:
         ports:
             - '3004:3004'
         environment:
-            DATABASE_URL: 'postgres://postgres:postgres@product-service-db:5432/product-service'
+            DATABASE_URL: 'postgres://postgres:postgres@product-service-db:5434/product-service'
         volumes:
             - ./backend/product-service:/home/node/app
         depends_on:
@@ -53,5 +52,5 @@ services:
             - product-service-db-data:/var/lib/postgresql/data
 
 volumes:
-    user-service-db-data:
     product-service-db-data:
+    payment-service-db-data:

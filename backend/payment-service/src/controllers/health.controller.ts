@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 
 export const healthCheckHandler = async (req: Request, res: Response) => {
     try {
-        // Vérifie la connexion à la base de données avec une requête simple
         await prisma.$queryRaw`SELECT 1`;
         res.status(200).json({ message: 'API is running and connected to PostgreSQL' });
     } catch (error) {
