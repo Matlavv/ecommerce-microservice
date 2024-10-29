@@ -123,6 +123,7 @@ app.post('/product', async (req: Request, res: Response): Promise<void> => {
 // Démarrer le serveur
 
 // Endpoint pour ajouter un produit avec une quantité au panier
+
 app.post('/cart/:cartId/product/:productId', async (req: Request, res: Response): Promise<void> => {
     const { cartId, productId } = req.params;
     const { quantity } = req.body;
@@ -141,8 +142,8 @@ app.post('/cart/:cartId/product/:productId', async (req: Request, res: Response)
             return;
         }
 
-        if (product.stock < quantity) {
-            res.status(400).json({ error: `Quantité demandée non disponible. Stock actuel : ${product.stock}.` });
+        if (product.quantity < quantity) {
+            res.status(400).json({ error: `Quantité demandée non disponible. Stock actuel : ${product.quantity}.` });
             return;
         }
 
@@ -150,7 +151,7 @@ app.post('/cart/:cartId/product/:productId', async (req: Request, res: Response)
         let cart = await prisma.cart.findUnique({ where: { id: parseInt(cartId) } });
 
         if (!cart) {
-            // Créez un nouveau panier
+            // Créez un nouveau panier avec le produit
             cart = await prisma.cart.create({
                 data: {
                     userId: 1, // Remplacez ceci par l'ID de l'utilisateur approprié
@@ -176,24 +177,35 @@ app.post('/cart/:cartId/product/:productId', async (req: Request, res: Response)
                     },
                 },
             });
-            res.status(200).json({ message: `Produit avec ID ${productId} ajouté au panier avec quantité ${quantity}.` });
+            res.status(200).json({ message: `Produit avec ID ${productId} ajouté au panier avec quantité ${quantity}.` } );
         }
 
-        // Mettez à jour le stock du produit en déduisant la quantité demandée
-        await prisma.product.update({
+        // Mettez à jour la quantité du produit en déduisant la quantité demandée
+        const updatedQuantity = product.quantity - quantity; // Calculer la quantité mise à jour
+
+        const updatedProduct = await prisma.product.update({
             where: { id: parseInt(productId) },
-            data: { stock: product.stock - quantity },
+            data: { quantity: updatedQuantity }, // Utiliser la quantité mise à jour
         });
+
+        // Si la quantité tombe à zéro, supprimez le produit
+        if (updatedProduct.quantity <= 0) {
+            await prisma.product.delete({
+                where: { id: parseInt(productId) },
+            });
+            res.status(200).json({ message: `Produit avec ID ${productId} supprimé du stock après ajout au panier.` });
+        } else {
+            res.status(201).json({ 
+                message: `Produit avec ID ${productId} ajouté au panier. Quantité restante : ${updatedProduct.quantity}.` 
+            });
+        }
 
     } catch (error) {
         console.error("Erreur lors de l'ajout au panier:", error);
-
-        // Vérifier si l'erreur a un message
         const errorMessage = (error as Error).message || "Erreur inconnue.";
         res.status(500).json({ error: "Erreur lors de l'ajout au panier.", details: errorMessage });
     }
 });
-
 
 
 

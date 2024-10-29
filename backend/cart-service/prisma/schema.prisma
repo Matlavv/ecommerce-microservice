@@ -18,6 +18,7 @@ model Product {
   name     String        // Nom du produit
   price    Float         // Prix du produit
   quantity Int           // Quantité disponible du produit
+  stock  Int
   carts    CartProduct[] @relation("ProductToCartProduct") // Relation avec CartProduct
 }
 
