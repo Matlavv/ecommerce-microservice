@@ -5,9 +5,9 @@ services:
             context: ./
             dockerfile: ./backend/payment-service/Dockerfile.dev
         ports:
-            - '3005:3000'
+            - '3005:3005'
         environment:
-            DATABASE_URL: 'postgres://postgres:postgres@payment-service-db:5435/payment-service'
+            DATABASE_URL: 'postgres://postgres:postgres@payment-service-db:5432/payment-service'
         volumes:
             - ./backend/payment-service:/home/node/app
         depends_on:
@@ -17,7 +17,7 @@ services:
         container_name: payment-service-db
         image: postgres:latest
         ports:
-            - '5435:5432'
+            - '5432:5432'
         environment:
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -52,5 +52,8 @@ services:
             - product-service-db-data:/var/lib/postgresql/data
 
 volumes:
+    user-service-db-data:
+    auth-service-db-data:
+    cart-service-db-data:
     product-service-db-data:
     payment-service-db-data:
