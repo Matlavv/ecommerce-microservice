@@ -1,28 +1,28 @@
 {
-  "name": "product-service",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "start": "node dist/app.js",
-    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/app.ts"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "devDependencies": {
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.8.1",
-    "@types/pg": "^8.11.10",
-    "prisma": "^5.21.1",
-    "typescript": "^5.6.3"
-  },
-  "dependencies": {
-    "@prisma/client": "^5.21.1",
-    "express": "^4.21.1",
-    "pg": "^8.13.1",
-    "ts-node-dev": "^2.0.0"
-  }
+    "name": "product-service",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "tsc",
+        "start": "node dist/app.js",
+        "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/app.ts"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "devDependencies": {
+        "@types/express": "^5.0.0",
+        "@types/node": "^22.8.1",
+        "@types/pg": "^8.11.10",
+        "prisma": "^5.21.1",
+        "typescript": "^5.6.3"
+    },
+    "dependencies": {
+        "@prisma/client": "^5.21.1",
+        "express": "^4.21.1",
+        "pg": "^8.13.1",
+        "ts-node-dev": "^2.0.0"
+    }
 }
