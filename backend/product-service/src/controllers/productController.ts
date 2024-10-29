@@ -1,4 +1,4 @@
-import { prisma } from '../app';
+import { prisma } from '../database';
 import { Request, Response } from 'express';
 
 const createProduct = async (req: Request, res: Response) => {
