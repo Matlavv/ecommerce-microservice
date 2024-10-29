@@ -5,7 +5,7 @@ services:
             context: ./
             dockerfile: ./backend/payment-service/Dockerfile.dev
         ports:
-            - '3005:3005'
+            - '3005:3000'
         environment:
             DATABASE_URL: 'postgres://postgres:postgres@payment-service-db:5432/payment-service'
         volumes:
@@ -19,9 +19,9 @@ services:
         ports:
             - '5432:5432'
         environment:
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_DB: ${POSTGRES_DB_PAYMENT}
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: payment-service
         volumes:
             - payment-service-db-data:/var/lib/postgresql/data
 
@@ -31,9 +31,9 @@ services:
             context: ./
             dockerfile: ./backend/product-service/Dockerfile.dev
         ports:
-            - '3004:3004'
+            - '3004:3000'
         environment:
-            DATABASE_URL: 'postgres://postgres:postgres@product-service-db:5434/product-service'
+            DATABASE_URL: 'postgres://postgres:postgres@product-service-db:5433/product-service'
         volumes:
             - ./backend/product-service:/home/node/app
         depends_on:
@@ -43,17 +43,15 @@ services:
         container_name: product-service-db
         image: postgres:latest
         ports:
-            - '5434:5432'
+            - '5433:5432'
         environment:
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_DB: ${POSTGRES_DB_PRODUCT}
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: product-service
         volumes:
             - product-service-db-data:/var/lib/postgresql/data
+            - ./backend/product-service/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
-    user-service-db-data:
-    auth-service-db-data:
-    cart-service-db-data:
-    product-service-db-data:
     payment-service-db-data:
+    product-service-db-data:
