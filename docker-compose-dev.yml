@@ -56,10 +56,6 @@ services:
             dockerfile: ./backend/auth-service/docker/Dockerfile.dev
         ports:
             - '3005:3005'
-        environment:
-            DATABASE_URL: 'postgres://postgres:postgres@user-service-db:5432/auth_db'
-        depends_on:
-            - auth-service-db
         volumes:
             - ./backend/auth-service:/home/node/app
 
