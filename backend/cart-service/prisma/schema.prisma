@@ -16,8 +16,9 @@ model Cart {
 }
 
 model Product {
-    id    Int    @id @default(autoincrement())
-    name  String // Ajoutez ce champ
-    price Float
-    carts Cart[] @relation("CartProducts")
+    id       Int    @id @default(autoincrement())
+    name     String // Nom du produit
+    price    Float  // Prix du produit
+    quantity Int    // Quantité du produit
+    carts    Cart[] @relation("CartProducts")
 }

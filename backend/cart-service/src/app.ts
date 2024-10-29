@@ -35,25 +35,6 @@ app.get('/products', async (req: Request, res: Response): Promise<void> => {
     }
 });
 
-app.post('/product', async (req: Request, res: Response): Promise<void> => {
-    const { name, price } = req.body; // Vous pouvez ajouter d'autres champs ici
-
-    try {
-        // Créer un nouveau produit dans la base de données
-        const newProduct = await prisma.product.create({
-            data: {
-                name,
-                price,
-            },
-        });
-
-        res.status(201).json(newProduct);
-    } catch (error) {
-        console.error("Erreur lors de la création du produit:", error);
-        res.status(500).json({ error: "Erreur lors de la création du produit." });
-    }
-});
-
 
 app.get('/cart', async (req: Request, res: Response): Promise<void> => {
     try {
@@ -65,41 +46,76 @@ app.get('/cart', async (req: Request, res: Response): Promise<void> => {
     }
 });
 
-
-// Endpoint pour ajouter un produit au panier
-app.post('/cart/:cartId/product/:productId', async (req: Request, res: Response): Promise<void> => {
-    const { cartId, productId } = req.params;
+// Endpoint pour ajouter un produit
+app.post('/product', async (req: Request, res: Response): Promise<void> => {
+    const { name, price, quantity } = req.body;
 
     try {
-        const cart = await prisma.cart.findUnique({ where: { id: parseInt(cartId) } });
-        const product = await prisma.product.findUnique({ where: { id: parseInt(productId) } });
-
-        if (!cart) {
-            res.status(404).json({ error: `Panier avec ID ${cartId} introuvable.` });
+        // Valider les données entrantes
+        if (!name || typeof price !== 'number' || typeof quantity !== 'number') {
+            res.status(400).json({ error: "Nom, prix, et quantité sont requis." });
             return;
         }
+
+        // Créer le produit
+        const newProduct = await prisma.product.create({
+            data: {
+                name,
+                price,
+                quantity, // Assurez-vous que le champ quantity est correctement référencé ici
+            },
+        });
+
+        res.status(201).json(newProduct);
+    } catch (error) {
+        console.error("Erreur lors de la création du produit:", error);
+        res.status(500).json({ error: "Erreur lors de la création du produit." });
+    }
+});
+
+app.post('/cart/:cartId/product/:productId', async (req: Request, res: Response): Promise<void> => {
+    const { cartId, productId } = req.params;
+    console.log(`Request received to add product ${productId} to cart ${cartId}`);
+
+    try {
+        const product = await prisma.product.findUnique({ where: { id: parseInt(productId) } });
+        console.log(`Product found: ${product}`);
 
         if (!product) {
             res.status(404).json({ error: `Produit avec ID ${productId} introuvable.` });
             return;
         }
 
-        // Ajoute le produit au panier
-        await prisma.cart.update({
-            where: { id: parseInt(cartId) },
-            data: {
-                products: {
-                    connect: { id: parseInt(productId) },
-                },
-            },
-        });
+        let cart = await prisma.cart.findUnique({ where: { id: parseInt(cartId) } });
+        console.log(`Cart found: ${cart}`);
 
-        res.status(200).json({ message: `Produit avec ID ${productId} ajouté au panier avec ID ${cartId}.` });
+        if (!cart) {
+            cart = await prisma.cart.create({
+                data: {
+                    userId: 1, // Changez ceci si nécessaire
+                    products: {
+                        connect: { id: parseInt(productId) },
+                    },
+                },
+            });
+            res.status(201).json({ message: `Panier créé avec ID ${cart.id} et produit ajouté.` });
+        } else {
+            await prisma.cart.update({
+                where: { id: parseInt(cartId) },
+                data: {
+                    products: {
+                        connect: { id: parseInt(productId) },
+                    },
+                },
+            });
+            res.status(200).json({ message: `Produit avec ID ${productId} ajouté au panier avec ID ${cartId}.` });
+        }
     } catch (error) {
         console.error("Erreur lors de l'ajout au panier:", error);
         res.status(500).json({ error: "Erreur lors de l'ajout au panier." });
     }
 });
+
 
 // Démarrer le serveur
 app.listen(PORT, () => {
