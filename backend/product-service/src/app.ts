@@ -1,39 +1,27 @@
 import express from 'express';
 
-import ProductRoute from './routes/productRoute';
-import { PrismaClient } from '@prisma/client';
+// ROUTES IMPORT
+import ProductRoute from './routes/product.route';
 
-export const prisma = new PrismaClient();
+// SWAGGER IMPORT
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from '../swagger';
 
 const app = express();
-const port = 3004;
+app.use(express.json());
 
-async function main() {
-    app.use(express.json());
 
-    // Enregistrer les routes API
-    app.use('/product', ProductRoute);
+// ROUTES
+app.use('/product', ProductRoute);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-    app.get('/', (req, res) => {
-        res.send('[Product] Server is running !');
-    });
 
-    // Capturer les routes non enregistrés
-    app.all('*', (req, res) => {
-        res.status(404).json({ error: `Route ${req.originalUrl} not found` });
-    });
+app.get('/', (req, res) => {
+    res.send('[Product] Server is running!');
+});
 
-    app.listen(port, () => {
-        console.log(`Server is listening on port ${port}`);
-    });
-}
+app.all('*', (req, res) => {
+    res.status(404).json({ error: `Route ${req.originalUrl} not found` });
+});
 
-main()
-    .then(async () => {
-        await prisma.$connect();
-    })
-    .catch(async (e) => {
-        console.error(e);
-        await prisma.$disconnect();
-        process.exit(1);
-    });
+export default app;
