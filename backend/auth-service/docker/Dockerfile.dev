@@ -1,0 +1,25 @@
+# Use the official Node.js image from the Docker Hub
+FROM node:20
+
+# Create and change to the app directory
+WORKDIR /home/node/app
+
+# Copy application dependency manifests to the container image.
+# A wildcard is used to ensure both package.json AND package-lock.json are copied.
+COPY ./backend/user-service/package.json ./
+
+# Install dependencies
+# RUN npm install
+
+# Set the timezone (log time)
+ENV TZ=Europe/Paris
+
+# Copy the rest of the application code to the container
+COPY ./backend/auth-service ./
+
+# Expose the port the app runs on
+EXPOSE 3005
+
+# Run the application
+# CMD ["npm", "run", "dev"]
+CMD npm install && npm run dev
