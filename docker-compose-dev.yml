@@ -41,6 +41,7 @@ services:
         environment:
             DATABASE_URL: 'postgresql://cart-service_owner:MgWtrb2d9yDi@ep-falling-credit-a2g8c4ya.eu-central-1.aws.neon.tech/cart-service?sslmode=require'
         volumes:
+            - /home/node/app/node_modules
             - ./backend/cart-service:/home/node/app
 
     payment-service:
@@ -66,6 +67,7 @@ services:
         environment:
             DATABASE_URL: 'postgresql://product-service_owner:sbKMwXGO0P3g@ep-black-leaf-a2qcyjx5.eu-central-1.aws.neon.tech/product-service?sslmode=require'
         volumes:
+            - /home/node/app/node_modules
             - ./backend/product-service:/home/node/app
 
     user-service-db:
