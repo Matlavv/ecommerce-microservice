@@ -7,51 +7,13 @@ services:
         ports:
             - '3005:3000'
         environment:
-            DATABASE_URL: 'postgres://postgres:postgres@payment-service-db:5432/payment-service'
+            DATABASE_URL: 'postgresql://ecommerce_owner:j3DWlwT8YqXC@ep-lively-lake-a2fgz6pc.eu-central-1.aws.neon.tech/ecommerce?sslmode=require'
         volumes:
             - ./backend/payment-service:/home/node/app
-        depends_on:
-            - payment-service-db
-
-    payment-service-db:
-        container_name: payment-service-db
-        image: postgres:latest
-        ports:
-            - '5432:5432'
-        environment:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: postgres
-            POSTGRES_DB: payment-service
-        volumes:
-            - payment-service-db-data:/var/lib/postgresql/data
-
-    product-service:
-        container_name: product-service
-        build:
-            context: ./
-            dockerfile: ./backend/product-service/Dockerfile.dev
-        ports:
-            - '3004:3000'
-        environment:
-            DATABASE_URL: 'postgres://postgres:postgres@product-service-db:5433/product-service'
-        volumes:
-            - ./backend/product-service:/home/node/app
-        depends_on:
-            - product-service-db
-
-    product-service-db:
-        container_name: product-service-db
-        image: postgres:latest
-        ports:
-            - '5433:5432'
-        environment:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: postgres
-            POSTGRES_DB: product-service
-        volumes:
-            - product-service-db-data:/var/lib/postgresql/data
-            - ./backend/product-service/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
+    user-service-db-data:
     payment-service-db-data:
     product-service-db-data:
+    auth-service-db-data:
+    cart-service-db-data:
