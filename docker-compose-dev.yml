@@ -1,4 +1,15 @@
 services:
+    cart-service:
+        container_name: cart-service
+        build:
+            context: ./
+            dockerfile: ./backend/cart-service/Dockerfile.dev
+        ports:
+            - '3003:3003'
+        environment:
+            DATABASE_URL: 'postgresql://cart-service_owner:MgWtrb2d9yDi@ep-falling-credit-a2g8c4ya.eu-central-1.aws.neon.tech/cart-service?sslmode=require'
+        volumes:
+            - ./backend/cart-service:/home/node/app
     payment-service:
         container_name: payment-service
         build:
@@ -10,10 +21,3 @@ services:
             DATABASE_URL: 'postgresql://ecommerce_owner:j3DWlwT8YqXC@ep-lively-lake-a2fgz6pc.eu-central-1.aws.neon.tech/ecommerce?sslmode=require'
         volumes:
             - ./backend/payment-service:/home/node/app
-
-volumes:
-    user-service-db-data:
-    payment-service-db-data:
-    product-service-db-data:
-    auth-service-db-data:
-    cart-service-db-data:

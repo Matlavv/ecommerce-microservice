@@ -1,125 +1,15 @@
 services:
-    user-service:
-        container_name: user-service
+    cart-service:
+        container_name: cart-service
         build:
             context: ./
-            dockerfile: ./backend/user-service/Dockerfile.dev
+            dockerfile: ./backend/cart-service/Dockerfile.dev
         ports:
-            - '3000:3000'
+            - '3003:3003'
         environment:
-            DATABASE_URL: 'postgres://postgres:postgres@user-service-db:5432/user_db'
-        depends_on:
-            - user-service-db
+            DATABASE_URL: 'postgresql://cart-service_owner:MgWtrb2d9yDi@ep-falling-credit-a2g8c4ya.eu-central-1.aws.neon.tech/cart-service?sslmode=require'
         volumes:
-            - ./backend/user-service:/home/node/app
-
-        # auth-service:
-        #     container_name: auth-service
-        #     build:
-        #         context: ./backend/auth-service
-        #         dockerfile: Dockerfile
-        #     ports:
-        #         - '4002:4000'
-        #     environment:
-        #         DATABASE_URL: 'postgres://postgres:postgres@auth-service-db:5432/auth-service'
-        #     depends_on:
-        #         - auth-service-db
-
-        # cart-service:
-        #     container_name: cart-service
-        #     build:
-        #         context: ./backend/cart-service
-        #         dockerfile: Dockerfile
-        #     ports:
-        #         - '4003:4000'
-        #     environment:
-        #         DATABASE_URL: 'postgres://postgres:postgres@cart-service-db:5432/cart-service'
-        #     depends_on:
-        #         - cart-service-db
-
-        # product-service:
-        #     container_name: product-service
-        #     build:
-        #         context: ./backend/product-service
-        #         dockerfile: Dockerfile
-        #     ports:
-        #         - '4004:4000'
-        #     environment:
-        #         DATABASE_URL: 'postgres://postgres:postgres@product-service-db:5432/product-service'
-        #     depends_on:
-        #         - product-service-db
-
-        # payment-service:
-        #     container_name: payment-service
-        #     build:
-        #         context: ./backend/payment-service
-        #         dockerfile: Dockerfile
-        #     ports:
-        #         - '4005:4000'
-        #     environment:
-        #         DATABASE_URL: 'postgres://postgres:postgres@payment-service-db:5432/payment-service'
-        #     depends_on:
-        #         - payment-service-db
-
-    user-service-db:
-        container_name: user-service-db
-        image: postgres:latest
-        ports:
-            - '5431:5432'
-        environment:
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_DB: ${POSTGRES_DB_USER}
-        volumes:
-            - user-service-db-data:/var/lib/postgresql/data
-
-        # auth-service-db:
-        #     container_name: auth-service-db
-        #     image: postgres:latest
-        #     ports:
-        #         - '5432:5432'
-        #     environment:
-        #         POSTGRES_USER: ${ POSTGRES_USER }
-        #         POSTGRES_PASSWORD: ${ POSTGRES_PASSWORD }
-        #         POSTGRES_DB: ${ POSTGRES_DB_AUTH }
-        #     volumes:
-        #         - auth-service-db-data:/var/lib/postgresql/data
-
-        # cart-service-db:
-        #     container_name: cart-service-db
-        #     image: postgres:latest
-        #     ports:
-        #         - '5433:5432'
-        #     environment:
-        #         POSTGRES_USER: ${ POSTGRES_USER }
-        #         POSTGRES_PASSWORD: ${ POSTGRES_PASSWORD }
-        #         POSTGRES_DB: ${ POSTGRES_DB_CART }
-        #     volumes:
-        #         - cart-service-db-data:/var/lib/postgresql/data
-
-        # product-service-db:
-        #     container_name: product-service-db
-        #     image: postgres:latest
-        #     ports:
-        #         - '5434:5432'
-        #     environment:
-        #         POSTGRES_USER: ${ POSTGRES_USER }
-        #         POSTGRES_PASSWORD: ${ POSTGRES_PASSWORD }
-        #         POSTGRES_DB: ${ POSTGRES_DB_PRODUCT }
-        #     volumes:
-        #         - product-service-db-data:/var/lib/postgresql/data
-
-        # payment-service-db:
-        #     container_name: payment-service-db
-        #     image: postgres:latest
-        #     ports:
-        #         - '5435:5432'
-        #     environment:
-        #         POSTGRES_USER: ${ POSTGRES_USER }
-        #         POSTGRES_PASSWORD: ${ POSTGRES_PASSWORD }
-        #         POSTGRES_DB: ${ POSTGRES_DB_PAYMENT }
-        #     volumes:
-        #         - payment-service-db-data:/var/lib/postgresql/data
+            - ./backend/cart-service:/home/node/app
 volumes:
     user-service-db-data:
     auth-service-db-data:

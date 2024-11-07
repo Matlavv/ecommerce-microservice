@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Cart {
+  id       Int           @id @default(autoincrement())
+  userId   Int
+  products CartProduct[] @relation("CartToCartProduct") // Relation avec CartProduct
+}
+
+model Product {
+  id       Int           @id @default(autoincrement())
+  name     String        // Nom du produit
+  price    Float         // Prix du produit
+  quantity Int           // Quantité disponible du produit
+  stock  Int
+  carts    CartProduct[] @relation("ProductToCartProduct") // Relation avec CartProduct
+}
+
+// Table de jointure entre Cart et Product
+model CartProduct {
+  id         Int      @id @default(autoincrement())
+  cart       Cart     @relation("CartToCartProduct", fields: [cartId], references: [id])
+  cartId     Int
+  product    Product  @relation("ProductToCartProduct", fields: [productId], references: [id])
+  productId  Int
+  quantity   Int      // Quantité du produit dans le panier
+
+    @@map("carteproduct") // Nom réel dans la base de données
+}
