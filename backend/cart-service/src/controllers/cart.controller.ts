@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { addProductToCartService, getCartService, removeProductFromCartService, getCartsWithProductsService } from '../services/cart.service';
+import { addProductToCartService, getCartService, removeProductFromCartService, getCartsWithProductsService, removeCartProductService, getAllCartProductsService } from '../services/cart.service';
 
 // Récupérer le panier
 export const getCart = async (req: Request, res: Response): Promise<void> => {
@@ -51,5 +51,32 @@ export const removeProductFromCart = async (req: Request, res: Response): Promis
     } catch (error) {
         console.error("Erreur lors de la suppression du produit du panier:", error);
         res.status(500).json({ error: "Erreur lors de la suppression du produit du panier." });
+    }
+};
+
+
+
+export const getAllCartProducts = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const cartProducts = await getAllCartProductsService();
+        res.status(200).json(cartProducts);
+    } catch (error) {
+        console.error("Erreur lors de la récupération des éléments de CartProduct:", error);
+        res.status(500).json({ error: "Erreur lors de la récupération des éléments de CartProduct." });
+    }
+};
+
+
+
+// Supprimer un élément spécifique de CartProduct
+export const removeCartProduct = async (req: Request, res: Response): Promise<void> => {
+    const { cartProductId } = req.params;
+
+    try {
+        const result = await removeCartProductService(parseInt(cartProductId));
+        res.status(result.status).json(result.message);
+    } catch (error) {
+        console.error("Erreur lors de la suppression de l'élément CartProduct:", error);
+        res.status(500).json({ error: "Erreur lors de la suppression de l'élément CartProduct." });
     }
 };

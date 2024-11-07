@@ -127,3 +127,37 @@ export const removeProductFromCartService = async (cartId: string, productId: st
     }
 };
 
+export const getAllCartProductsService = async () => {
+    try {
+        const cartProducts = await prisma.cartProduct.findMany(); // Utilisez 'cartProduct' ici
+        return cartProducts;
+    } catch (error) {
+        console.error("Erreur dans getAllCartProductsService:", error);
+        throw new Error("Erreur lors de la récupération des éléments de CartProduct.");
+    }
+};
+
+
+// Service pour supprimer un élément spécifique de CartProduct
+export const removeCartProductService = async (cartProductId: number) => {
+    try {
+        // Vérifier si l'élément CartProduct existe
+        const cartProduct = await prisma.cartProduct.findUnique({
+            where: { id: cartProductId },
+        });
+
+        if (!cartProduct) {
+            return { status: 404, message: "Élément CartProduct non trouvé." };
+        }
+
+        // Supprimer l'élément CartProduct
+        await prisma.cartProduct.delete({
+            where: { id: cartProductId },
+        });
+
+        return { status: 200, message: "Élément CartProduct supprimé avec succès." };
+    } catch (error) {
+        console.error("Erreur dans removeCartProductService:", error);
+        throw new Error("Erreur lors de la suppression de l'élément CartProduct.");
+    }
+};

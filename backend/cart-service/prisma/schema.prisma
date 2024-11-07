@@ -31,4 +31,6 @@ model CartProduct {
   product    Product  @relation("ProductToCartProduct", fields: [productId], references: [id])
   productId  Int
   quantity   Int      // Quantité du produit dans le panier
+
+    @@map("carteproduct") // Nom réel dans la base de données
 }

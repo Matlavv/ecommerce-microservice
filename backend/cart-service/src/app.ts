@@ -32,6 +32,7 @@ app.use('/cart', cartRoutes);
 // Utiliser les routes des produits
 app.use('/products', productRoutes); // Ajout des routes des produits
 
+
 // Démarrer le serveur
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

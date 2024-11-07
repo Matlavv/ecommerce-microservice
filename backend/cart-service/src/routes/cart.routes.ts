@@ -1,5 +1,5 @@
 import express from 'express';
-import { addProductToCart, getCart, getCartsWithProductsController, removeProductFromCart} from '../controllers/cart.controller';
+import { addProductToCart, getCart, getCartsWithProductsController, removeProductFromCart, removeCartProduct, getAllCartProducts} from '../controllers/cart.controller';
 
 const router = express.Router();
 
@@ -13,5 +13,9 @@ router.post('/:cartId/product/:productId', addProductToCart);
 
 router.delete('/:cartId/product/:productId', removeProductFromCart);
 
+router.get('/cartproducts', getAllCartProducts);
+
+// Nouvelle route pour supprimer un élément spécifique de CartProduct
+router.delete('/cartproduct/:cartProductId', removeCartProduct);
 
 export default router;
