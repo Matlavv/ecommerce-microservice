@@ -7,6 +7,11 @@ services:
         ports:
             - '3003:3003'
         environment:
+            DATABASE_URL: 'postgres://postgres:postgres@user-service-db:5432/user_db'
+            PORT: "" # si port a configurer pour le serveur EXPRESS
+            BASE_URL_SWAGGER: "" # si nom de domaine a configurer
+        depends_on:
+            - user-service-db
             DATABASE_URL: 'postgresql://cart-service_owner:MgWtrb2d9yDi@ep-falling-credit-a2g8c4ya.eu-central-1.aws.neon.tech/cart-service?sslmode=require'
         volumes:
             - ./backend/cart-service:/home/node/app
