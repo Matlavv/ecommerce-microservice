@@ -7,23 +7,9 @@ services:
         ports:
             - '3003:3003'
         environment:
-            DATABASE_URL: 'postgres://postgres:postgres@cart-service-db:5432/cart-service'
+            DATABASE_URL: 'postgresql://cart-service_owner:MgWtrb2d9yDi@ep-falling-credit-a2g8c4ya.eu-central-1.aws.neon.tech/cart-service?sslmode=require'
         volumes:
             - ./backend/cart-service:/home/node/app
-        depends_on:
-            - cart-service-db
-
-    cart-service-db:
-        container_name: cart-service-db
-        image: postgres:latest
-        ports:
-            - '5433:5432'
-        environment:
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_DB: ${POSTGRES_DB_CART}
-        volumes:
-            - cart-service-db-data:/var/lib/postgresql/data
 volumes:
     user-service-db-data:
     auth-service-db-data:
