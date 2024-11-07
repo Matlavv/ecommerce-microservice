@@ -1,3 +1,6 @@
+networks:
+    user-service-network: {}
+    
 services:
     user-service:
         container_name: user-service
@@ -7,49 +10,18 @@ services:
         ports:
             - '3000:3000'
         environment:
-            DATABASE_URL: 'postgres://postgres:postgres@user-service-db:5432/user_db'
+            DATABASE_URL: ${DATABASE_URL}
+            PORT: ${PORT} 
+            BASE_URL_SWAGGER_USER_SERVICE: ${BASE_URL_SWAGGER_USER_SERVICE} 
+        volumes:
+            - /home/node/app/node_modules
+            - ./backend/user-service:/home/node/app
         depends_on:
             - user-service-db
-        volumes:
-            - ./backend/user-service:/home/node/app
-
-    user-service-db:
-        container_name: user-service-db
-        image: postgres:latest
-        ports:
-            - '5431:5432'
-        environment:
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_DB: ${POSTGRES_DB_USER}
-        volumes:
-            - user-service-db-data:/var/lib/postgresql/data
-
-    # product-service:
-    #     container_name: product-service
-    #     build:
-    #         context: ./
-    #         dockerfile: ./backend/product-service/Dockerfile.dev
-    #     ports:
-    #         - '3003:3003'
-    #     environment:
-    #         DATABASE_URL: 'postgres://postgres:postgres@product-service-db:5432/product_db'
-    #     depends_on:
-    #         - product-service-db
-
-    # product-service-db:
-    #     container_name: product-service-db
-    #     image: postgres:latest
-    #     ports:
-    #         - '5432:5433'
-    #     environment:
-    #         POSTGRES_USER: ${POSTGRES_USER}
-    #         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    #         POSTGRES_DB: ${POSTGRES_DB_USER}
-    #     volumes:
-    #         - product-service-db-data:/var/lib/postgresql/data
-
-    auth-service:
+        networks:
+            - user-service-network
+            
+     auth-service:
         container_name: auth-service
         build:
             context: ./
@@ -58,7 +30,56 @@ services:
             - '3005:3005'
         volumes:
             - ./backend/auth-service:/home/node/app
+            
+    cart-service:
+        container_name: cart-service
+        build:
+            context: ./
+            dockerfile: ./backend/cart-service/Dockerfile.dev
+        ports:
+            - '3003:3003'
+        environment:
+            DATABASE_URL: 'postgresql://cart-service_owner:MgWtrb2d9yDi@ep-falling-credit-a2g8c4ya.eu-central-1.aws.neon.tech/cart-service?sslmode=require'
+        volumes:
+            - ./backend/cart-service:/home/node/app
 
-volumes:
+    payment-service:
+        container_name: payment-service
+        build:
+            context: ./
+            dockerfile: ./backend/payment-service/Dockerfile.dev
+        ports:
+            - '3005:3000'
+        environment:
+            DATABASE_URL: 'postgresql://ecommerce_owner:j3DWlwT8YqXC@ep-lively-lake-a2fgz6pc.eu-central-1.aws.neon.tech/ecommerce?sslmode=require'
+        volumes:
+            - ./backend/payment-service:/home/node/app
+
+    product-service:
+        container_name: product-service
+        build:
+            context: ./
+            dockerfile: ./backend/product-service/Dockerfile.dev
+        ports:
+            - '3004:3004'
+        environment:
+            DATABASE_URL: 'postgresql://product-service_owner:sbKMwXGO0P3g@ep-black-leaf-a2qcyjx5.eu-central-1.aws.neon.tech/product-service?sslmode=require'
+        volumes:
+            - ./backend/product-service:/home/node/app
+            
+    user-service-db:
+        container_name: user-service-db
+        image: postgres:latest
+        ports:
+            - '5431:5432'
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB_SERVICE}
+        volumes:
+            - user-service-db-data:/var/lib/postgresql/data
+        networks:
+            - user-service-network
+           
+ volumes:
     user-service-db-data:
-    product-service-db-data:
