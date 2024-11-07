@@ -53,6 +53,7 @@ services:
         environment:
             DATABASE_URL: 'postgresql://ecommerce_owner:j3DWlwT8YqXC@ep-lively-lake-a2fgz6pc.eu-central-1.aws.neon.tech/ecommerce?sslmode=require'
         volumes:
+            - /home/node/app/node_modules
             - ./backend/payment-service:/home/node/app
 
     product-service:
