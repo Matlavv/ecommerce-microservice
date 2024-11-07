@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { addProductToCartService, getCartService, removeProductFromCartService, getCartsWithProductsService, removeCartProductService, getAllCartProductsService } from '../services/cart.service';
+import { addProductToCartService, getCartService, removeProductFromCartService, getCartsWithProductsService, removeCartProductService, getAllCartProductsService, updateProductQuantityInCartService } from '../services/cart.service';
 
 // Récupérer le panier
 export const getCart = async (req: Request, res: Response): Promise<void> => {
@@ -41,6 +41,27 @@ export const getCartsWithProductsController = async (req: Request, res: Response
         return 
     }
 };
+
+// Mise à jour de la quantité d'un produit dans un panier
+export const updateProductQuantityInCart = async (req: Request, res: Response): Promise<void> => {
+    const { cartId, productId } = req.params;
+    const { quantity } = req.body; // Récupère la nouvelle quantité
+
+    if (!quantity || quantity <= 0) {
+        res.status(400).json({ error: "La quantité doit être un nombre positif." });
+        return;
+    }
+
+    try {
+        const result = await updateProductQuantityInCartService(parseInt(cartId), parseInt(productId), quantity);
+        res.status(result.status).json(result.message);
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour de la quantité dans le panier:", error);
+        res.status(500).json({ error: "Erreur lors de la mise à jour de la quantité dans le panier." });
+    }
+};
+
+
 
 export const removeProductFromCart = async (req: Request, res: Response): Promise<void> => {
     const { cartId, productId } = req.params;

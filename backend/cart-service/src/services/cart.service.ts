@@ -91,6 +91,27 @@ export const addProductToCartService = async (cartId: string, productId: string,
     }
 };
 
+export const updateProductQuantityInCartService = async (cartId: number, productId: number, quantity: number) => {
+    try {
+        // Mise à jour de la quantité pour un produit spécifique dans un panier
+        await prisma.cartProduct.updateMany({
+            where: {
+                cartId: cartId,
+                productId: productId
+            },
+            data: {
+                quantity: quantity
+            }
+        });
+
+        return { status: 200, message: "Quantité mise à jour avec succès dans le panier." };
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour de la quantité dans le panier:", error);
+        return { status: 500, message: "Erreur lors de la mise à jour de la quantité dans le panier." };
+    }
+};
+
+
 export const removeProductFromCartService = async (cartId: string, productId: string) => {
     try {
         // Trouver le panier avec les produits
