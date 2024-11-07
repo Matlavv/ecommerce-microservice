@@ -11,6 +11,8 @@ services:
             - '3000:3000'
         environment:
             DATABASE_URL: ${DATABASE_URL}
+            PORT: ${PORT} # si port a configurer pour le serveur EXPRESS
+            BASE_URL_SWAGGER_USER_SERVICE: ${BASE_URL_SWAGGER_USER_SERVICE} # si nom de domaine a configurer
         volumes:
             - /home/node/app/node_modules
             - ./backend/user-service:/home/node/app
