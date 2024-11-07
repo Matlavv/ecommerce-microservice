@@ -23,7 +23,7 @@ connectToDb();
 
 // Route de base pour tester si le serveur fonctionne
 app.get('/', (req, res) => {
-    res.send('Server is running');
+    res.send('Server is running petit bg');
 });
 
 // Utiliser les routes du panier

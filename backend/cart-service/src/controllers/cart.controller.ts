@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { addProductToCartService, getCartService } from '../services/cart.service';
+import { addProductToCartService, getCartService, removeProductFromCartService, getCartsWithProductsService } from '../services/cart.service';
 
 // Récupérer le panier
 export const getCart = async (req: Request, res: Response): Promise<void> => {
@@ -28,5 +28,28 @@ export const addProductToCart = async (req: Request, res: Response): Promise<voi
     } catch (error) {
         console.error("Erreur lors de l'ajout au panier:", error);
         res.status(500).json({ error: "Erreur lors de l'ajout au panier." });
+    }
+};
+
+export const getCartsWithProductsController = async (req: Request, res: Response):  Promise<void> =>{
+    try {
+        const result = await getCartsWithProductsService();
+        res.status(result.status).json(result);
+        return 
+    } catch (error) {
+        res.status(500).json({ error: error});
+        return 
+    }
+};
+
+export const removeProductFromCart = async (req: Request, res: Response): Promise<void> => {
+    const { cartId, productId } = req.params;
+
+    try {
+        const result = await removeProductFromCartService(cartId, productId);
+        res.status(result.status).json(result.message);
+    } catch (error) {
+        console.error("Erreur lors de la suppression du produit du panier:", error);
+        res.status(500).json({ error: "Erreur lors de la suppression du produit du panier." });
     }
 };
