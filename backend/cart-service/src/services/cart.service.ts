@@ -2,7 +2,8 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-interface CartProduct { // Définissez un type personnalisé
+interface CartProduct {
+    // Définissez un type personnalisé
     id: number;
     productId: number;
     quantity: number;
@@ -30,14 +31,16 @@ export const getCartsWithProductsService = async () => {
 
         return { status: 200, carts: cartsWithProducts };
     } catch (error) {
-        console.error("Erreur dans getCartsWithProductsService:", error);
-        throw new Error("Erreur lors de la récupération des paniers avec produits.");
+        console.error('Erreur dans getCartsWithProductsService:', error);
+        throw new Error('Erreur lors de la récupération des paniers avec produits.');
     }
 };
 
-
-
-export const addProductToCartService = async (cartId: string, productId: string, quantity: number) => {
+export const addProductToCartService = async (
+    cartId: string,
+    productId: string,
+    quantity: number,
+) => {
     const product = await prisma.product.findUnique({ where: { id: parseInt(productId) } });
 
     if (!product) {
@@ -67,7 +70,10 @@ export const addProductToCartService = async (cartId: string, productId: string,
             where: { id: parseInt(productId) },
             data: { quantity: product.quantity - quantity },
         });
-        return { status: 201, message: `Panier créé avec ID ${cart.id} et produit ajouté avec quantité ${quantity}.` };
+        return {
+            status: 201,
+            message: `Panier créé avec ID ${cart.id} et produit ajouté avec quantité ${quantity}.`,
+        };
     } else {
         // Ajoutez le produit avec la quantité spécifiée au panier existant
         await prisma.cart.update({
@@ -87,30 +93,39 @@ export const addProductToCartService = async (cartId: string, productId: string,
             where: { id: parseInt(productId) },
             data: { quantity: updatedQuantity },
         });
-        return { status: 200, message: `Produit avec ID ${productId} ajouté au panier avec quantité ${quantity}.` };
+        return {
+            status: 200,
+            message: `Produit avec ID ${productId} ajouté au panier avec quantité ${quantity}.`,
+        };
     }
 };
 
-export const updateProductQuantityInCartService = async (cartId: number, productId: number, quantity: number) => {
+export const updateProductQuantityInCartService = async (
+    cartId: number,
+    productId: number,
+    quantity: number,
+) => {
     try {
         // Mise à jour de la quantité pour un produit spécifique dans un panier
         await prisma.cartProduct.updateMany({
             where: {
                 cartId: cartId,
-                productId: productId
+                productId: productId,
             },
             data: {
-                quantity: quantity
-            }
+                quantity: quantity,
+            },
         });
 
-        return { status: 200, message: "Quantité mise à jour avec succès dans le panier." };
+        return { status: 200, message: 'Quantité mise à jour avec succès dans le panier.' };
     } catch (error) {
-        console.error("Erreur lors de la mise à jour de la quantité dans le panier:", error);
-        return { status: 500, message: "Erreur lors de la mise à jour de la quantité dans le panier." };
+        console.error('Erreur lors de la mise à jour de la quantité dans le panier:', error);
+        return {
+            status: 500,
+            message: 'Erreur lors de la mise à jour de la quantité dans le panier.',
+        };
     }
 };
-
 
 export const removeProductFromCartService = async (cartId: string, productId: string) => {
     try {
@@ -126,7 +141,9 @@ export const removeProductFromCartService = async (cartId: string, productId: st
 
         // console.log(`Contenu du panier : ${JSON.stringify(cart)}`);
 
-        const cartProduct = cart.products.find((item: CartProduct) => item.productId === parseInt(productId));
+        const cartProduct = cart.products.find(
+            (item: CartProduct) => item.productId === parseInt(productId),
+        );
 
         if (!cartProduct) {
             throw new Error(`Produit avec ID ${productId} non trouvé dans le panier.`);
@@ -143,8 +160,8 @@ export const removeProductFromCartService = async (cartId: string, productId: st
 
         return { status: 200, message: `Produit avec ID ${productId} supprimé du panier.` };
     } catch (error) {
-        console.error("Erreur dans removeProductFromCartService:", error);
-        throw new Error("Erreur lors de la suppression du produit du panier.");
+        console.error('Erreur dans removeProductFromCartService:', error);
+        throw new Error('Erreur lors de la suppression du produit du panier.');
     }
 };
 
@@ -153,11 +170,10 @@ export const getAllCartProductsService = async () => {
         const cartProducts = await prisma.cartProduct.findMany(); // Utilisez 'cartProduct' ici
         return cartProducts;
     } catch (error) {
-        console.error("Erreur dans getAllCartProductsService:", error);
-        throw new Error("Erreur lors de la récupération des éléments de CartProduct.");
+        console.error('Erreur dans getAllCartProductsService:', error);
+        throw new Error('Erreur lors de la récupération des éléments de CartProduct.');
     }
 };
-
 
 // Service pour supprimer un élément spécifique de CartProduct
 export const removeCartProductService = async (cartProductId: number) => {
@@ -168,7 +184,7 @@ export const removeCartProductService = async (cartProductId: number) => {
         });
 
         if (!cartProduct) {
-            return { status: 404, message: "Élément CartProduct non trouvé." };
+            return { status: 404, message: 'Élément CartProduct non trouvé.' };
         }
 
         // Supprimer l'élément CartProduct
@@ -176,9 +192,9 @@ export const removeCartProductService = async (cartProductId: number) => {
             where: { id: cartProductId },
         });
 
-        return { status: 200, message: "Élément CartProduct supprimé avec succès." };
+        return { status: 200, message: 'Élément CartProduct supprimé avec succès.' };
     } catch (error) {
-        console.error("Erreur dans removeCartProductService:", error);
+        console.error('Erreur dans removeCartProductService:', error);
         throw new Error("Erreur lors de la suppression de l'élément CartProduct.");
     }
 };

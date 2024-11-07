@@ -12,7 +12,9 @@ const options = {
         },
         servers: [
             {
-                url: process.env.BASE_URL_SWAGGER_USER_SERVICE || 'http://localhost:' + process.env.PORT,
+                url:
+                    process.env.BASE_URL_SWAGGER_USER_SERVICE ||
+                    'http://localhost:' + process.env.PORT,
             },
         ],
     },

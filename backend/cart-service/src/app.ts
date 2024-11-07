@@ -14,9 +14,9 @@ app.use(express.json());
 async function connectToDb() {
     try {
         await prisma.$connect();
-        console.log("Connected to the database successfully");
+        console.log('Connected to the database successfully');
     } catch (error) {
-        console.error("Error connecting to the database", error);
+        console.error('Error connecting to the database', error);
     }
 }
 connectToDb();
@@ -31,7 +31,6 @@ app.use('/cart', cartRoutes);
 
 // Utiliser les routes des produits
 app.use('/products', productRoutes); // Ajout des routes des produits
-
 
 // Démarrer le serveur
 app.listen(PORT, () => {
