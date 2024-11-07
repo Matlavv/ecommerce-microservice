@@ -10,6 +10,7 @@ services:
             DATABASE_URL: 'postgresql://cart-service_owner:MgWtrb2d9yDi@ep-falling-credit-a2g8c4ya.eu-central-1.aws.neon.tech/cart-service?sslmode=require'
         volumes:
             - ./backend/cart-service:/home/node/app
+
     payment-service:
         container_name: payment-service
         build:
@@ -21,3 +22,15 @@ services:
             DATABASE_URL: 'postgresql://ecommerce_owner:j3DWlwT8YqXC@ep-lively-lake-a2fgz6pc.eu-central-1.aws.neon.tech/ecommerce?sslmode=require'
         volumes:
             - ./backend/payment-service:/home/node/app
+
+    product-service:
+        container_name: product-service
+        build:
+            context: ./
+            dockerfile: ./backend/product-service/Dockerfile.dev
+        ports:
+            - '3004:3004'
+        environment:
+            DATABASE_URL: 'postgresql://product-service_owner:sbKMwXGO0P3g@ep-black-leaf-a2qcyjx5.eu-central-1.aws.neon.tech/product-service?sslmode=require'
+        volumes:
+            - ./backend/product-service:/home/node/app
