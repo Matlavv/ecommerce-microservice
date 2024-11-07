@@ -6,17 +6,22 @@ const userRegister = async (req: Request, res: Response) => {
         const { firstname, lastname, email, password, address, role } = req.body;
 
         // Validation des champs obligatoires
-         if (!email || !password) {
-             return res.status(400).json({ error: 'All fields are required' });
-         }
+        if (!email || !password) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
 
         // Validation des types de données
-         if (typeof firstname !== 'string' || typeof lastname !== 'string' || typeof email !== 'string' ||
-             typeof password !== 'string' || typeof address !== 'string') {
-             return res.status(400).json({ error: 'Invalid data types' });
-         }
+        if (
+            typeof firstname !== 'string' ||
+            typeof lastname !== 'string' ||
+            typeof email !== 'string' ||
+            typeof password !== 'string' ||
+            typeof address !== 'string'
+        ) {
+            return res.status(400).json({ error: 'Invalid data types' });
+        }
 
-                 // Validation du format de l'email
+        // Validation du format de l'email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return res.status(400).json({ error: 'Invalid email format' });
@@ -25,17 +30,21 @@ const userRegister = async (req: Request, res: Response) => {
         // Validation de la complexité du mot de passe
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{12,}$/; // Minimum 8 caractères, au moins une lettre et un chiffre
         if (!passwordRegex.test(password)) {
-            return res.status(400).json({ error: 'Password must be at least 12 characters long and contain at least one letter and one number' });
+            return res
+                .status(400)
+                .json({
+                    error: 'Password must be at least 12 characters long and contain at least one letter and one number',
+                });
         }
-        
+
         // Vérifier si l'utilisateur existe déjà
-        const user = await prisma.user.findUnique({
+        const userExist = await prisma.user.findUnique({
             where: {
                 email,
             },
         });
 
-        if (user) {
+        if (userExist) {
             return res.status(400).json({ error: 'Adresse email deja utiliser' });
         }
 
@@ -57,5 +66,5 @@ const userRegister = async (req: Request, res: Response) => {
 };
 
 export default {
-    userRegister
+    userRegister,
 };
