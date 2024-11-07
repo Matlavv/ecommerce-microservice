@@ -1,3 +1,6 @@
+networks:
+    user-service-network: {}
+
 services:
     user-service:
         container_name: user-service
@@ -7,13 +10,14 @@ services:
         ports:
             - '3000:3000'
         environment:
-            DATABASE_URL: 'postgres://postgres:postgres@user-service-db:5432/user_db'
+            DATABASE_URL: ${DATABASE_URL}
         volumes:
             - /home/node/app/node_modules
             - ./backend/user-service:/home/node/app
         depends_on:
             - user-service-db
-
+        networks:
+            - user-service-network
         # auth-service:
         #     container_name: auth-service
         #     build:
@@ -73,6 +77,8 @@ services:
             POSTGRES_DB: ${POSTGRES_DB_SERVICE}
         volumes:
             - user-service-db-data:/var/lib/postgresql/data
+        networks:
+            - user-service-network
 
         # auth-service-db:
         #     container_name: auth-service-db
