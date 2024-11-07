@@ -12,7 +12,7 @@ const options = {
         },
         servers: [
             {
-                url: 'http://localhost:3000',
+                url: process.env.BASE_URL_SWAGGER || 'http://localhost:' + process.env.PORT,
             },
         ],
     },
@@ -21,6 +21,6 @@ const options = {
 
 const swaggerSpec = swaggerJSDoc(options);
 
-export const setupSwagger = (app : Express) => {
+export const setupSwagger = (app: Express) => {
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 };

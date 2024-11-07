@@ -30,11 +30,9 @@ const userRegister = async (req: Request, res: Response) => {
         // Validation de la complexité du mot de passe
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{12,}$/; // Minimum 8 caractères, au moins une lettre et un chiffre
         if (!passwordRegex.test(password)) {
-            return res
-                .status(400)
-                .json({
-                    error: 'Password must be at least 12 characters long and contain at least one letter and one number',
-                });
+            return res.status(400).json({
+                error: 'Password must be at least 12 characters long and contain at least one letter and one number',
+            });
         }
 
         // Vérifier si l'utilisateur existe déjà

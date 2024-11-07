@@ -8,6 +8,8 @@ services:
             - '3000:3000'
         environment:
             DATABASE_URL: 'postgres://postgres:postgres@user-service-db:5432/user_db'
+            PORT: "" # si port a configurer pour le serveur EXPRESS
+            BASE_URL_SWAGGER: "" # si nom de domaine a configurer
         depends_on:
             - user-service-db
         volumes:
