@@ -1,5 +1,12 @@
 import { Request, Response } from 'express';
-import { createProduct, getAllProducts, updateProduct, getProductById, deleteProduct, patchProduct } from '../services/product.service';
+import {
+    createProduct,
+    getAllProducts,
+    updateProduct,
+    getProductById,
+    deleteProduct,
+    patchProduct,
+} from '../services/product.service';
 
 export const createProductHandler = async (req: Request, res: Response) => {
     try {
@@ -41,7 +48,7 @@ export const updateProductHandler = async (req: Request, res: Response) => {
 export const deleteProductHandler = async (req: Request, res: Response) => {
     try {
         await deleteProduct(Number(req.params.id));
-        res.status(200).json({ message: "Produit supprimé" });
+        res.status(200).json({ message: 'Produit supprimé' });
     } catch (e) {
         res.status(500).json({ error: e });
     }

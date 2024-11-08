@@ -1,5 +1,12 @@
 import express from 'express';
-import { getAllProductsHandler, createProductHandler, getProductByIdHandler, updateProductHandler, patchProductHandler, deleteProductHandler } from '../controllers/product.controller';
+import {
+    getAllProductsHandler,
+    createProductHandler,
+    getProductByIdHandler,
+    updateProductHandler,
+    patchProductHandler,
+    deleteProductHandler,
+} from '../controllers/product.controller';
 
 const router = express.Router();
 
@@ -44,10 +51,7 @@ const router = express.Router();
  *       201:
  *         description: Product created successfully
  */
-router
-    .route('/')
-    .get(getAllProductsHandler)
-    .post(createProductHandler);
+router.route('/').get(getAllProductsHandler).post(createProductHandler);
 
 /**
  * @swagger

@@ -1,10 +1,8 @@
 networks:
-    # user-service-network: {}
-    microservices-network: 
+    microservices-network:
         driver: bridge
 
 services:
-
     api-gateway:
         container_name: api-gateway
         build:
@@ -42,8 +40,6 @@ services:
             - ./backend/user-service:/home/node/app
         networks:
             - microservices-network
-        # networks:
-        #     - user-service-network
 
     auth-service:
         container_name: auth-service
@@ -101,6 +97,3 @@ services:
             - ./backend/product-service:/home/node/app
         networks:
             - microservices-network
-
-volumes:
-    user-service-db-data:
