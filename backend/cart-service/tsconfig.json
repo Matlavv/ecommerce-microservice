@@ -8,6 +8,6 @@
         "forceConsistentCasingInFileNames": true,
         "outDir": "dist"
     },
-    "include": ["src/**/*", "prisma/seed.ts", "cartService.ts"],
+    "include": ["src/**/*", "prisma/seed.ts", "src/cartservice.ts"],
     "exclude": ["node_modules", "dist"]
 }

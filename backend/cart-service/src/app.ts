@@ -2,6 +2,7 @@ import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import cartRoutes from './routes/cart.routes';
 import productRoutes from './routes/product.routes'; // Importer les routes de produit
+import { setupSwagger } from './swagger';
 
 const app = express();
 const PORT = process.env.PORT || 3003;
@@ -9,6 +10,9 @@ const prisma = new PrismaClient();
 
 // Middleware pour parser le JSON
 app.use(express.json());
+
+// Configuration Swagger
+setupSwagger(app);
 
 // Fonction de connexion à la base de données
 async function connectToDb() {
