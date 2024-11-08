@@ -63,6 +63,63 @@ const userRegister = async (req: Request, res: Response) => {
     }
 };
 
+const getUser = async (req: Request, res: Response) => {
+    
+    try {
+        const users = await prisma.user.findUnique({
+            where: {
+                id: Number(req.params.id),
+            },
+        });
+        res.status(200).json(users);
+        if (!users) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'An error occurred while processing your request' });
+    }
+};
+
+const userUpdate = async (req: Request, res: Response) => {
+    try {
+        const { firstname, lastname, email, password, address} = req.body;
+        const user = await prisma.user.update({
+            where: {
+                id: Number(req.params.id),
+            },
+            data: {
+                firstname,
+                lastname,
+                email,
+                password,
+                address,
+            },
+        });
+        res.status(200).json(user);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'An error occurred while processing your request' });
+    }
+}
+
+const userDelete = async (req: Request, res: Response) => {
+    try {
+        const deleteUser = await prisma.user.delete({
+            where: {
+                id: Number(req.params.id),
+            },
+        });
+        res.status(200).json(deleteUser);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'An error occurred while processing your request' });
+    }
+}
+
 export default {
     userRegister,
+    getUser,
+    userUpdate,
+    userDelete,
 };
