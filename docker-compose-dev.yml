@@ -34,14 +34,12 @@ services:
         ports:
             - '${PORT_USER}:3001'
         environment:
-            DATABASE_URL: ${DATABASE_URL}
+            DATABASE_URL: postgresql://neondb_owner:t9BlU3dIXWyM@ep-odd-queen-a2h9bv9d.eu-central-1.aws.neon.tech/neondb?sslmode=require
             PORT: ${PORT_USER}
             BASE_URL_SWAGGER_USER_SERVICE: ${BASE_URL_SWAGGER_USER_SERVICE}
         volumes:
             - /home/node/app/node_modules
             - ./backend/user-service:/home/node/app
-        depends_on:
-            - user-service-db
         networks:
             - microservices-network
         # networks:
@@ -103,22 +101,6 @@ services:
             - ./backend/product-service:/home/node/app
         networks:
             - microservices-network
-
-    user-service-db:
-        container_name: user-service-db
-        image: postgres:latest
-        ports:
-            - '5431:5432'
-        environment:
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_DB: ${POSTGRES_DB_SERVICE}
-        volumes:
-            - user-service-db-data:/var/lib/postgresql/data
-        networks:
-            - microservices-network
-        # networks:
-        #     - user-service-network
 
 volumes:
     user-service-db-data:
