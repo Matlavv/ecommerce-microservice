@@ -5,7 +5,7 @@ import { setupSwagger } from './swagger/swagger';
 
 const app = express();
 export const prisma = new PrismaClient();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 async function main() {
     app.use(express.json());

@@ -4,9 +4,7 @@ export const register = async (req: Request, res: Response) => {
     try {
         // const newProduct = await createProduct(req.body);
 
-        console.log('register controller');
-
-        const response = await fetch('http://user-service:3001/register', {
+        const response = await fetch('http://user-service:3001/users/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -14,9 +12,13 @@ export const register = async (req: Request, res: Response) => {
             body: JSON.stringify(req.body),
         });
 
-        if (!response.ok) {
-            throw new Error('Failed to fetch from auth service');
-        }
+        
+
+        // if (!response.ok) {
+        //     console.log('ressssssss', response);
+            
+        //     throw new Error('Failed to fetch from auth service');
+        // }
 
         console.log('register controller after fetch');
 
