@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 
 app.use('/auth', authRoute);
-app.use('/', productRoute);
+app.use('/products', productRoute);
 
 
 app.get('/', (req, res) => {

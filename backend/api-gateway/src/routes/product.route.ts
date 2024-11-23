@@ -1,12 +1,21 @@
 import express from 'express';
-import { getProducts } from '../controllers/product.controller';
+import { getProducts, getProduct, createProduct, deleteProduct, updateProduct, patchProduct } from '../controllers/product.controller';
 import { verifyToken } from '../middlewares/jwt.middleware';
 
 const router = express.Router();
 
 router
-    .route('/product')
-    .get(verifyToken, getProducts)
-    // .post(register);
+    .route('/')
+    .get(getProducts)
+    .post(verifyToken, createProduct);
+
+
+router
+    .route('/:id')
+    .get(getProduct)
+    .put(verifyToken, updateProduct)
+    .patch(verifyToken, patchProduct)
+    .delete(verifyToken, deleteProduct);
+
 
 export default router;

@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 
 // ROUTES
-app.use('/product', ProductRoute);
+app.use('/products', ProductRoute);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get('/', (req, res) => {

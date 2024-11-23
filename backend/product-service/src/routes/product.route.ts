@@ -51,7 +51,10 @@ const router = express.Router();
  *       201:
  *         description: Product created successfully
  */
-router.route('/').get(getAllProductsHandler).post(createProductHandler);
+router
+    .route('/')
+    .get(getAllProductsHandler)
+    .post(createProductHandler);
 
 /**
  * @swagger
