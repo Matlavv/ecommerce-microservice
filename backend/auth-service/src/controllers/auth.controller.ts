@@ -1,5 +1,5 @@
 import { login } from '../services/auth.service';
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import Joi from 'joi';
 import { JWT_SECRET } from '../config/secrets';
 const jwt = require('jsonwebtoken');
@@ -79,7 +79,7 @@ export const loginUser = async (req: Request, res: Response) => {
         }
 
         // Check password and generate token
-        const token = await login(user?.id, user?.password, password);        
+        const token = await login(user?.id, user?.role, user?.password, password);        
 
         if (!token) {
             console.error("Error: Invalid credentials");
@@ -96,41 +96,74 @@ export const loginUser = async (req: Request, res: Response) => {
     }
 }
 
-export const validateToken = async (req: Request, res: Response) => {
+export const validateToken = async (req: Request, res: Response, next: NextFunction) => {
     
-    let userToken = req.header('Authorization');    
+    try {
+        let userToken = req.header('Authorization');
     
-    // Check if token is present
-    if (!userToken) {
-        return res.status(403).json({ authError: 'Access forbidden: missing token' })
-    }
+        // Check if token is present
+        if (!userToken) {
+            return res.status(403).json({ authError: 'Access forbidden: missing token' })
+        }
+    
+        // Remove 'Bearer ' from token
+        if (userToken.startsWith('Bearer ')) {
+            userToken = userToken.split(' ')[1];
+        }
 
-    // Remove 'Bearer ' from token
-    if (userToken.startsWith('Bearer ')) {
-        userToken = userToken.split(' ')[1];
-    }
+        // Verify token
+        const decoded: any = jwt.verify(userToken, JWT_SECRET);
 
-    // Verify token
-    const payload = await new Promise((resolve, reject) => {
-        jwt.verify(userToken, JWT_SECRET, (error, decoded) => {
-            if (error) {
-                reject(error);
-                res.status(400).json({ 
-                    message: 'Invalide token', 
-                    isValid: false 
-                });
-                return;
-
-            } else {
-                resolve(decoded);
-                res.status(200).json({ 
-                    message: 'Token is valid', 
-                    isValid: true, 
-                    userId: decoded.userId 
-                });
-            }
+        res.status(200).json({ 
+            message: 'Token is valid',
+            isTokenValid: true,
+            userId: decoded.userId,
+            userRole: decoded.userRole
         });
-    });
 
-    return;
+        next();
+
+    } catch (e) {
+        console.error('Token verification error:', (e as Error).message);
+        return res.status(400).json({ message: 'Invalid token', isTokenValid: false });
+    }
 }
+
+export const validateTokenAdmin = (req: Request, res: Response, next: NextFunction) => {
+    
+    try {
+        let userToken = req.header('Authorization');
+    
+        // Check if token is present
+        if (!userToken) {
+            return res.status(403).json({ authError: 'Access forbidden: missing token' })
+        }
+    
+        // Remove 'Bearer ' from token
+        if (userToken.startsWith('Bearer ')) {
+            userToken = userToken.split(' ')[1];
+        }
+
+        // Verify token
+        const decoded: any = jwt.verify(userToken, JWT_SECRET);
+
+        // Check if user is admin
+        if (!decoded.userRole) {
+            console.log('[Auth] require Admin: User role not found');
+            res.status(403).json({ message: 'Access denied. Admins only.', isAdmin: false });
+            return;
+        }
+
+        res.status(200).json({ 
+            message: 'Token is valid',
+            isAdmin: true,
+            userId: decoded.userId,
+            userRole: decoded.userRole
+        });
+
+        next();
+    } catch (e) {
+        console.error('Token verification error:', (e as Error).message);
+        return res.status(400).json({ message: 'Invalid token', isTokenValid: false });
+    }
+};

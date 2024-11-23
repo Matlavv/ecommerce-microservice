@@ -1,6 +1,6 @@
 import express from 'express';
 import { loginUser, registerUser } from '../controllers/auth.controller';
-import { verifyToken } from '../middlewares/jwt.middleware';
+import { verifyToken, verifyTokenAdmin } from '../middlewares/jwt.middleware';
 
 const router = express.Router();
 
@@ -15,6 +15,11 @@ router
 router
     .route('/validate-token')
     .get(verifyToken);
+
+
+router
+    .route('/validate-admin')
+    .get(verifyTokenAdmin);
 
 
 

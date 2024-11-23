@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser, validateToken } from '../controllers/auth.controller';
+import { registerUser, loginUser, validateToken, validateTokenAdmin } from '../controllers/auth.controller';
 
 
 const router = express.Router();
@@ -56,6 +56,10 @@ router
 router
     .route('/validate-token')
     .get(validateToken);
+
+router
+    .route('/validate-admin')
+    .get(validateTokenAdmin);
 
     
 export default router;

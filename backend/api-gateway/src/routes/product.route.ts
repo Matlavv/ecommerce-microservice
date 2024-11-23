@@ -1,21 +1,21 @@
 import express from 'express';
 import { getProducts, getProduct, createProduct, deleteProduct, updateProduct, patchProduct } from '../controllers/product.controller';
-import { verifyToken } from '../middlewares/jwt.middleware';
+import { verifyToken, verifyTokenAdmin } from '../middlewares/jwt.middleware';
 
 const router = express.Router();
 
 router
     .route('/')
     .get(getProducts)
-    .post(verifyToken, createProduct);
+    .post(verifyTokenAdmin, createProduct);
 
 
 router
     .route('/:id')
     .get(getProduct)
-    .put(verifyToken, updateProduct)
-    .patch(verifyToken, patchProduct)
-    .delete(verifyToken, deleteProduct);
+    .put(verifyTokenAdmin, updateProduct)
+    .patch(verifyTokenAdmin, patchProduct)
+    .delete(verifyTokenAdmin, deleteProduct);
 
 
 export default router;
