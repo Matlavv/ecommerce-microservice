@@ -10,7 +10,7 @@ export const login = async (userId: number, accountPassword: string, reqPassword
         throw new Error('Invalid credentials');
     }
 
-    const token = jwt.sign({ userId: userId }, JWT_SECRET, { expiresIn: '4h' });
+    const token = jwt.sign({ userId: userId }, JWT_SECRET, { expiresIn: '1d' });
 
     return token;
 };

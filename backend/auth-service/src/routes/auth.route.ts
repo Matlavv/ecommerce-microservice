@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser } from '../controllers/auth.controller';
+import { registerUser, loginUser, validateToken } from '../controllers/auth.controller';
 
 
 const router = express.Router();
@@ -52,6 +52,10 @@ router
 router
     .route('/login')
     .post(loginUser);
+
+router
+    .route('/validate-token')
+    .get(validateToken);
 
     
 export default router;
