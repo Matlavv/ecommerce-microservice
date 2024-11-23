@@ -1,25 +1,11 @@
 import { login } from '../services/auth.service';
 import { Request, Response } from 'express';
-
 import Joi from 'joi';
 
 
-
-
-export const loginUser = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-    try {
-        const token = await login(email, password);
-        res.status(200).json({ token });
-    } catch (error) {
-        res.status(401).json({ message: 'Invalid credentials' });
-    }
-};
-
-
-
 export const registerUser = async (req: Request, res: Response) => {
-    try {        
+    try {
+        // Check data
         const userSchema = Joi.object({
             firstname: Joi.string().min(2).max(50),
             lastname: Joi.string().min(2).max(50),
@@ -29,7 +15,6 @@ export const registerUser = async (req: Request, res: Response) => {
             role: Joi.boolean().default(false),
         });
 
-
         const { error, value } = userSchema.validate(req.body);
 
         if (error) {
@@ -37,7 +22,7 @@ export const registerUser = async (req: Request, res: Response) => {
             return;
         } 
 
-
+        // Create user
         const response = await fetch(`${process.env.USER_SERVICE_URL}/users`, {
             method: 'POST',
             headers: {
@@ -55,14 +40,50 @@ export const registerUser = async (req: Request, res: Response) => {
         }
 
         const data = await response.json();
-        console.log('Data:', data);
         res.status(201).json(data);
         return;
 
     } catch (error) {
-        
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
         return;
     }
 };
+
+export const loginUser = async (req: Request, res: Response) => {
+    try {
+        const { email, password } = req.body;        
+
+        // Get user
+        const userRes = await fetch(`${process.env.USER_SERVICE_URL}/users/${email}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const user = await userRes.json();
+
+        // Check if user exists
+        if (!user?.id) {
+            console.error('Error: User not found');
+            res.status(400).json({ error: 'User not found' });
+            return; 
+        }
+
+        // Check password and generate token
+        const token = await login(user?.id, user?.password, password);        
+
+        if (!token) {
+            console.error("Error: Invalid credentials");
+            res.status(400).json({ error: "Invalid credentials" });
+            return;
+        }
+
+        res.status(200).json({ token });
+        return;
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+        return;
+    }
+}

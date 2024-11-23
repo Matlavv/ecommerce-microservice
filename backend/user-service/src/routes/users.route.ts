@@ -1,5 +1,5 @@
 import express from 'express';
-import { createUser } from '../controllers/users.controller';
+import { createUser, getUser } from '../controllers/users.controller';
 
 
 const router = express.Router();
@@ -7,9 +7,13 @@ const router = express.Router();
 
 router
     .route('/')
-    .post(createUser);
+    .post(createUser)
+    .get(getUser);
     
-
+    
+router
+    .route('/:email_user')
+    .get(getUser);
 
 
 export default router;

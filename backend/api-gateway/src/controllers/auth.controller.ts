@@ -17,7 +17,6 @@ export const registerUser = async (req: Request, res: Response) => {
         }
 
         const data = await response.json();
-        console.log('Data:', data);
         res.status(201).json(data);
 
     } catch (error) {
@@ -44,7 +43,6 @@ export const loginUser = async (req: Request, res: Response) => {
         }
 
         const data = await response.json();
-        console.log('Data:', data);
         res.status(200).json(data);
 
     } catch (error) {
