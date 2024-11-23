@@ -1,7 +1,7 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
-import UsersRoute from './routes/usersRoutes';
 import { setupSwagger } from './swagger/swagger';
+import UsersRoute from './routes/users.route';
 
 const app = express();
 export const prisma = new PrismaClient();

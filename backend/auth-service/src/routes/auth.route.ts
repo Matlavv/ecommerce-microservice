@@ -1,7 +1,9 @@
-import { Router } from 'express';
-import { loginController } from '../controllers/authController';
+import express from 'express';
+import { registerUser, loginUser } from '../controllers/authController';
 
-const authRoutes: Router = Router();
+
+const router = express.Router();
+
 
 /**
  * @swagger
@@ -41,6 +43,15 @@ const authRoutes: Router = Router();
  *         description: Invalid credentials
  */
 
-authRoutes.post('/login', loginController);
 
-export default authRoutes;
+
+router
+    .route('/register')
+    .post(registerUser);
+
+router
+    .route('/login')
+    .post(loginUser);
+
+    
+export default router;

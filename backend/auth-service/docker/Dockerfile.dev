@@ -18,7 +18,7 @@ ENV TZ=Europe/Paris
 COPY ./backend/auth-service ./
 
 # Expose the port the app runs on
-EXPOSE 3005
+EXPOSE 3002
 
 # Run the application
 # CMD ["npm", "run", "dev"]

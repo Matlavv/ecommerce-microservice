@@ -1,6 +1,6 @@
 import app from './app';
 
-const port = 3000;
+const port = 3002;
 
 const startServer = async () => {
     app.listen(port, () => {
