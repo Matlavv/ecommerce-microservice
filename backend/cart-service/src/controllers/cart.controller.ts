@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import {
     addProductToCartService,
     getCartService,
+    getUserCartService,
     removeProductFromCartService,
     getCartsWithProductsService,
     removeCartProductService,
@@ -9,8 +10,8 @@ import {
     updateProductQuantityInCartService,
 } from '../services/cart.service';
 
-// Récupérer le panier
-export const getCart = async (req: Request, res: Response): Promise<void> => {
+// Récupérer les paniers
+export const getCarts = async (req: Request, res: Response): Promise<void> => {
     try {
         const cart = await getCartService();
         res.status(200).json(cart);
@@ -20,12 +21,23 @@ export const getCart = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
+export const getUserCart = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const cart = await getUserCartService(parseInt(req.params.userId));
+        res.status(200).json(cart);
+    } catch (error) {
+        console.error('Erreur lors de la récupération du panier:', error);
+        res.status(500).json({ error: 'Erreur lors de la récupération du panier.' });
+    }
+}
+
+
 // Ajouter un produit au panier
 export const addProductToCart = async (req: Request, res: Response): Promise<void> => {
     const { productId } = req.params;
     const { quantity } = req.body;
 
-    const userId = 1; // User
+    // const userId = 1; // User
 
     if (!quantity || quantity <= 0) {
         res.status(400).json({ error: 'La quantité doit être un nombre positif.' });
@@ -33,7 +45,7 @@ export const addProductToCart = async (req: Request, res: Response): Promise<voi
     }
 
     try {
-        const result = await addProductToCartService(userId, productId, quantity);
+        const result = await addProductToCartService(parseInt(req.params.userId), productId, quantity);
         res.status(result.status).json(result.message);
     } catch (error) {
         console.error("Erreur lors de l'ajout au panier:", error);

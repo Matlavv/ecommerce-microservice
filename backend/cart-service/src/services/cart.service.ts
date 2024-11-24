@@ -13,6 +13,20 @@ export const getCartService = async () => {
     return await prisma.cart.findMany();
 };
 
+export const getUserCartService = async (userId: number) => {
+    const cart = await prisma.cart.findFirst({ where: { userId: userId } });
+
+    if (!cart) {
+        return { status: 404, message: 'Panier non trouvé.' };
+    }
+
+    const cartProducts = await prisma.cartProduct.findMany({
+        where: { cartId: cart.id },
+    });
+
+    return { status: 200, cartProducts: cartProducts };
+}
+
 export const getCartsWithProductsService = async () => {
     try {
         // Récupérer tous les paniers avec leurs produits
