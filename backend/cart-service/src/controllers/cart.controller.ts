@@ -22,8 +22,10 @@ export const getCart = async (req: Request, res: Response): Promise<void> => {
 
 // Ajouter un produit au panier
 export const addProductToCart = async (req: Request, res: Response): Promise<void> => {
-    const { cartId, productId } = req.params;
+    const { productId } = req.params;
     const { quantity } = req.body;
+
+    const userId = 1; // User
 
     if (!quantity || quantity <= 0) {
         res.status(400).json({ error: 'La quantité doit être un nombre positif.' });
@@ -31,7 +33,7 @@ export const addProductToCart = async (req: Request, res: Response): Promise<voi
     }
 
     try {
-        const result = await addProductToCartService(cartId, productId, quantity);
+        const result = await addProductToCartService(userId, productId, quantity);
         res.status(result.status).json(result.message);
     } catch (error) {
         console.error("Erreur lors de l'ajout au panier:", error);

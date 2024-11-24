@@ -37,67 +37,90 @@ export const getCartsWithProductsService = async () => {
 };
 
 export const addProductToCartService = async (
-    cartId: string,
+    userId: number,
     productId: string,
     quantity: number,
 ) => {
-    const product = await prisma.product.findUnique({ where: { id: parseInt(productId) } });
 
+    
+    // Check if product exists
+    const res = await fetch(`${process.env.PRODUCT_SERVICE_URL}/products/${productId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    const product = await res.json();
+
+    
     if (!product) {
         throw new Error(`Produit avec ID ${productId} introuvable.`);
     }
 
-    if (product.quantity < quantity) {
-        throw new Error(`Quantité demandée non disponible. Stock actuel : ${product.quantity}.`);
+    if (product.stock_quantity < quantity) {
+        throw new Error(`Quantité demandée non disponible. Stock actuel : ${product.stock_quantity}.`);
     }
 
-    let cart = await prisma.cart.findUnique({ where: { id: parseInt(cartId) } });
-
-    if (!cart) {
+    // Get user cart
+    let cart = await prisma.cart.findFirst({ where: { userId: userId } });
+    
+    // If user cart does not exist, create one
+    if (!cart) {        
         cart = await prisma.cart.create({
             data: {
-                userId: 1, // Remplacez ceci par l'ID de l'utilisateur approprié
-                products: {
-                    create: {
-                        productId: parseInt(productId),
-                        quantity,
-                    },
-                },
+                userId: userId,
             },
         });
-        // Mettre à jour la quantité du produit après l'ajout au panier
-        await prisma.product.update({
-            where: { id: parseInt(productId) },
-            data: { quantity: product.quantity - quantity },
-        });
-        return {
-            status: 201,
-            message: `Panier créé avec ID ${cart.id} et produit ajouté avec quantité ${quantity}.`,
-        };
-    } else {
-        // Ajoutez le produit avec la quantité spécifiée au panier existant
-        await prisma.cart.update({
-            where: { id: parseInt(cartId) },
+        
+        cart = cart;        
+    }
+
+    // Mettre à jour la quantité du produit après l'ajout au panier
+    const updatedQuantity = product.stock_quantity - quantity;
+
+    const response = await fetch(`${process.env.PRODUCT_SERVICE_URL}/products/${productId}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ stock_quantity: updatedQuantity }),
+    });
+
+
+    // Check if product is already in cart
+    let cartProduct = await prisma.cartProduct.findFirst({ 
+        where: {
+            cartId: cart.id,
+            productId: parseInt(productId)
+        }
+    });
+    
+    // If product is not in cart, add it
+    if (!cartProduct) {
+        cartProduct = await prisma.cartProduct.create({
             data: {
-                products: {
-                    create: {
-                        productId: parseInt(productId),
-                        quantity,
-                    },
-                },
+                cartId: cart.id,
+                productId: parseInt(productId),
+                quantity: quantity,
             },
         });
-        // Mettre à jour la quantité du produit après l'ajout au panier
-        const updatedQuantity = product.quantity - quantity;
-        await prisma.product.update({
-            where: { id: parseInt(productId) },
-            data: { quantity: updatedQuantity },
-        });
+
         return {
             status: 200,
             message: `Produit avec ID ${productId} ajouté au panier avec quantité ${quantity}.`,
         };
+    } else {
+        await prisma.cartProduct.update({
+            where: { id: cartProduct.id },
+            data: { quantity: cartProduct.quantity + quantity },
+        });
+
+        return {
+            status: 200,
+            message: `Produit avec ID ${productId} mis à jour dans le panier avec quantité ${cartProduct.quantity + quantity}.`,
+        };
     }
+
 };
 
 export const updateProductQuantityInCartService = async (

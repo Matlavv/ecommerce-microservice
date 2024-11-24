@@ -70,6 +70,8 @@ services:
             - '3003:3003'
         environment:
             DATABASE_URL: 'postgresql://cart-service_owner:MgWtrb2d9yDi@ep-falling-credit-a2g8c4ya.eu-central-1.aws.neon.tech/cart-service?sslmode=require'
+        env_file:
+            - ./.env.dev
         volumes:
             - /home/node/app/node_modules
             - ./backend/cart-service:/home/node/app

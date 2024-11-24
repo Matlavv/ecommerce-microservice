@@ -14,10 +14,12 @@ const router = express.Router();
 // Route pour récupérer le panier
 router.get('/', getCart);
 
-router.get('/carts-with-products', getCartsWithProductsController);
+// router.get('/carts-with-products', getCartsWithProductsController);
 
 // Route pour ajouter un produit au panier
-router.post('/:cartId/product/:productId', addProductToCart);
+router.post('/product/:productId', addProductToCart);
+
+
 
 router.put('/:cartId/cartproducts/:productId', updateProductQuantityInCart);
 
