@@ -11,7 +11,6 @@ tmp
 # Docker
 docker-compose.override.yml
 docker-compose.override.yaml
-Dockerfile
 
 # Prisma
 prisma/migrations/
@@ -19,7 +18,14 @@ prisma/dev.db
 
 # Environment variables
 .env
+.env.dev
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+
+# MacOSX
+.DS_Store
+
+# IDE
+.idea/

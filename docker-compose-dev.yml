@@ -7,7 +7,7 @@ services:
         container_name: api-gateway
         build:
             context: ./
-            dockerfile: ./backend/api-gateway/Dockerfile.prod
+            dockerfile: ./backend/api-gateway/Dockerfile.dev
         ports:
             - '3000:3000'
         environment:
@@ -16,6 +16,7 @@ services:
             - ./.env.dev
         volumes:
             - /home/node/app/node_modules
+            - ./backend/api-gateway:/home/node/app
         depends_on:
             - user-service
             - auth-service
@@ -29,17 +30,18 @@ services:
         container_name: user-service
         build:
             context: ./
-            dockerfile: ./backend/user-service/Dockerfile.prod
+            dockerfile: ./backend/user-service/Dockerfile.dev
         ports:
-            - '${PORT_USER}:3001'
+            - '3001:3001'
         environment:
             DATABASE_URL: 'postgresql://neondb_owner:t9BlU3dIXWyM@ep-odd-queen-a2h9bv9d.eu-central-1.aws.neon.tech/neondb?sslmode=require'
-            PORT: ${PORT_USER}
+            PORT: 3001
             BASE_URL_SWAGGER_USER_SERVICE: ${BASE_URL_SWAGGER_USER_SERVICE}
         env_file:
             - ./.env.dev
         volumes:
             - /home/node/app/node_modules
+            - ./backend/user-service:/home/node/app
         networks:
             - microservices-network
 
@@ -47,7 +49,7 @@ services:
         container_name: auth-service
         build:
             context: ./
-            dockerfile: ./backend/auth-service/docker/Dockerfile.prod
+            dockerfile: ./backend/auth-service/docker/Dockerfile.dev
         ports:
             - '3002:3002'
         env_file:
@@ -63,7 +65,7 @@ services:
         container_name: cart-service
         build:
             context: ./
-            dockerfile: ./backend/cart-service/Dockerfile.prod
+            dockerfile: ./backend/cart-service/Dockerfile.dev
         ports:
             - '3003:3003'
         environment:
@@ -72,6 +74,7 @@ services:
             - ./.env.dev
         volumes:
             - /home/node/app/node_modules
+            - ./backend/cart-service:/home/node/app
         networks:
             - microservices-network
 
@@ -79,13 +82,14 @@ services:
         container_name: payment-service
         build:
             context: ./
-            dockerfile: ./backend/payment-service/Dockerfile.prod
+            dockerfile: ./backend/payment-service/Dockerfile.dev
         ports:
             - '3005:3000'
         environment:
             DATABASE_URL: 'postgresql://ecommerce_owner:j3DWlwT8YqXC@ep-lively-lake-a2fgz6pc.eu-central-1.aws.neon.tech/ecommerce?sslmode=require'
         volumes:
             - /home/node/app/node_modules
+            - ./backend/payment-service:/home/node/app
         networks:
             - microservices-network
 
@@ -93,12 +97,13 @@ services:
         container_name: product-service
         build:
             context: ./
-            dockerfile: ./backend/product-service/Dockerfile.prod
+            dockerfile: ./backend/product-service/Dockerfile.dev
         ports:
             - '3004:3004'
         environment:
             DATABASE_URL: 'postgresql://product-service_owner:sbKMwXGO0P3g@ep-black-leaf-a2qcyjx5.eu-central-1.aws.neon.tech/product-service?sslmode=require'
         volumes:
             - /home/node/app/node_modules
+            - ./backend/product-service:/home/node/app
         networks:
             - microservices-network
