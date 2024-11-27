@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserCart, addProductToCart } from '../controllers/cart.controller';
+import { getUserCart, addProductToCart, getUserCartSuggests } from '../controllers/cart.controller';
 import { verifyToken, verifyTokenAdmin } from '../middlewares/jwt.middleware';
 
 const router = express.Router();
@@ -13,6 +13,11 @@ router
 router
     .route('/product/:productId')
     .post(verifyToken, addProductToCart);
+
+
+router
+    .route('/suggests/:userId')
+    .get(verifyToken, getUserCartSuggests);
 
 
 export default router;

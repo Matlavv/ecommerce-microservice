@@ -8,6 +8,7 @@ import {
     removeCartProductService,
     getAllCartProductsService,
     updateProductQuantityInCartService,
+    getCartSuggestsService
 } from '../services/cart.service';
 
 // Récupérer les paniers
@@ -24,6 +25,17 @@ export const getCarts = async (req: Request, res: Response): Promise<void> => {
 export const getUserCart = async (req: Request, res: Response): Promise<void> => {
     try {
         const cart = await getUserCartService(parseInt(req.params.userId));
+        res.status(200).json(cart);
+    } catch (error) {
+        console.error('Erreur lors de la récupération du panier:', error);
+        res.status(500).json({ error: 'Erreur lors de la récupération du panier.' });
+    }
+}
+
+
+export const getCartSuggests = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const cart = await getCartSuggestsService(parseInt(req.params.userId));
         res.status(200).json(cart);
     } catch (error) {
         console.error('Erreur lors de la récupération du panier:', error);

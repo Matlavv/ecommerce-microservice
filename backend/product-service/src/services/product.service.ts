@@ -41,3 +41,14 @@ export const patchProduct = async (
         data,
     });
 };
+
+
+export const getProductsByTag = async (tag: string) => {    
+    return await prisma.product.findMany({
+        where: {
+            tags: {
+                has: tag,
+            },
+        },
+    });
+}

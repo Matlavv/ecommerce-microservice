@@ -7,6 +7,7 @@ import {
     removeCartProduct,
     getAllCartProducts,
     updateProductQuantityInCart,
+    getCartSuggests
 } from '../controllers/cart.controller';
 
 const router = express.Router();
@@ -19,6 +20,8 @@ router.get('/users/:userId', getUserCart);
 // Route pour ajouter un produit au panier de l'utilisateur
 router.post('/users/:userId/product/:productId', addProductToCart);
 
+
+router.get('/suggests/:userId', getCartSuggests);
 
 
 router.put('/:cartId/cartproducts/:productId', updateProductQuantityInCart);
