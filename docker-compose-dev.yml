@@ -32,10 +32,10 @@ services:
             context: ./
             dockerfile: ./backend/user-service/Dockerfile.dev
         ports:
-            - '${PORT_USER}:3001'
+            - '3001:3001'
         environment:
             DATABASE_URL: 'postgresql://neondb_owner:t9BlU3dIXWyM@ep-odd-queen-a2h9bv9d.eu-central-1.aws.neon.tech/neondb?sslmode=require'
-            PORT: ${PORT_USER}
+            PORT: 3001
             BASE_URL_SWAGGER_USER_SERVICE: ${BASE_URL_SWAGGER_USER_SERVICE}
         env_file:
             - ./.env.dev
