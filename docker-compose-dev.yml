@@ -1,25 +1,49 @@
 networks:
-    user-service-network: {}
+    microservices-network:
+        driver: bridge
 
 services:
+    api-gateway:
+        container_name: api-gateway
+        build:
+            context: ./
+            dockerfile: ./backend/api-gateway/Dockerfile.dev
+        ports:
+            - '3000:3000'
+        environment:
+            DATABASE_URL: 'postgresql://product-service_owner:sbKMwXGO0P3g@ep-black-leaf-a2qcyjx5.eu-central-1.aws.neon.tech/product-service?sslmode=require'
+        env_file:
+            - ./.env.dev
+        volumes:
+            - /home/node/app/node_modules
+            - ./backend/api-gateway:/home/node/app
+        depends_on:
+            - user-service
+            - auth-service
+            - cart-service
+            - payment-service
+            - product-service
+        networks:
+            - microservices-network
+
     user-service:
         container_name: user-service
         build:
             context: ./
             dockerfile: ./backend/user-service/Dockerfile.dev
         ports:
-            - '3000:3000'
+            - '${PORT_USER}:3001'
         environment:
-            DATABASE_URL: ${DATABASE_URL}
-            PORT: ${PORT}
+            DATABASE_URL: postgresql://neondb_owner:t9BlU3dIXWyM@ep-odd-queen-a2h9bv9d.eu-central-1.aws.neon.tech/neondb?sslmode=require
+            PORT: ${PORT_USER}
             BASE_URL_SWAGGER_USER_SERVICE: ${BASE_URL_SWAGGER_USER_SERVICE}
+        env_file:
+            - ./.env.dev
         volumes:
             - /home/node/app/node_modules
             - ./backend/user-service:/home/node/app
-        depends_on:
-            - user-service-db
         networks:
-            - user-service-network
+            - microservices-network
 
     auth-service:
         container_name: auth-service
@@ -27,9 +51,15 @@ services:
             context: ./
             dockerfile: ./backend/auth-service/docker/Dockerfile.dev
         ports:
-            - '3005:3005'
+            - '3002:3002'
+        env_file:
+            - ./.env.dev
         volumes:
             - ./backend/auth-service:/home/node/app
+        networks:
+            - microservices-network
+        depends_on:
+            - user-service
 
     cart-service:
         container_name: cart-service
@@ -40,9 +70,13 @@ services:
             - '3003:3003'
         environment:
             DATABASE_URL: 'postgresql://cart-service_owner:MgWtrb2d9yDi@ep-falling-credit-a2g8c4ya.eu-central-1.aws.neon.tech/cart-service?sslmode=require'
+        env_file:
+            - ./.env.dev
         volumes:
             - /home/node/app/node_modules
             - ./backend/cart-service:/home/node/app
+        networks:
+            - microservices-network
 
     payment-service:
         container_name: payment-service
@@ -50,12 +84,14 @@ services:
             context: ./
             dockerfile: ./backend/payment-service/Dockerfile.dev
         ports:
-            - '3001:3000'
+            - '3005:3000'
         environment:
             DATABASE_URL: 'postgresql://ecommerce_owner:j3DWlwT8YqXC@ep-lively-lake-a2fgz6pc.eu-central-1.aws.neon.tech/ecommerce?sslmode=require'
         volumes:
             - /home/node/app/node_modules
             - ./backend/payment-service:/home/node/app
+        networks:
+            - microservices-network
 
     product-service:
         container_name: product-service
@@ -69,20 +105,5 @@ services:
         volumes:
             - /home/node/app/node_modules
             - ./backend/product-service:/home/node/app
-
-    user-service-db:
-        container_name: user-service-db
-        image: postgres:latest
-        ports:
-            - '5431:5432'
-        environment:
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_DB: ${POSTGRES_DB_SERVICE}
-        volumes:
-            - user-service-db-data:/var/lib/postgresql/data
         networks:
-            - user-service-network
-
-volumes:
-    user-service-db-data:
+            - microservices-network

@@ -1,7 +1,7 @@
 import express from 'express';
 import {
     addProductToCart,
-    getCart,
+    getUserCart,
     getCartsWithProductsController,
     removeProductFromCart,
     removeCartProduct,
@@ -11,13 +11,15 @@ import {
 
 const router = express.Router();
 
-// Route pour récupérer le panier
-router.get('/', getCart);
+// Route pour récupérer le panier de l'utilisateur
+router.get('/users/:userId', getUserCart);
 
-router.get('/carts-with-products', getCartsWithProductsController);
+// router.get('/carts-with-products', getCartsWithProductsController);
 
-// Route pour ajouter un produit au panier
-router.post('/:cartId/product/:productId', addProductToCart);
+// Route pour ajouter un produit au panier de l'utilisateur
+router.post('/users/:userId/product/:productId', addProductToCart);
+
+
 
 router.put('/:cartId/cartproducts/:productId', updateProductQuantityInCart);
 

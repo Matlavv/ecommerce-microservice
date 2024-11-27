@@ -1,11 +1,11 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
-import UsersRoute from './routes/usersRoutes';
 import { setupSwagger } from './swagger/swagger';
+import UsersRoute from './routes/users.route';
 
 const app = express();
 export const prisma = new PrismaClient();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 async function main() {
     app.use(express.json());

@@ -1,5 +1,12 @@
 import express from 'express';
-import { getAllProductsHandler, createProductHandler, getProductByIdHandler, updateProductHandler, patchProductHandler, deleteProductHandler } from '../controllers/product.controller';
+import {
+    getAllProductsHandler,
+    createProductHandler,
+    getProductByIdHandler,
+    updateProductHandler,
+    patchProductHandler,
+    deleteProductHandler,
+} from '../controllers/product.controller';
 
 const router = express.Router();
 

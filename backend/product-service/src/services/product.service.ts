@@ -16,7 +16,10 @@ export const getProductById = async (id: number) => {
     });
 };
 
-export const updateProduct = async (id: number, data: Partial<Omit<Product, 'id' | 'createdAt' | 'updatedAt'>>) => {
+export const updateProduct = async (
+    id: number,
+    data: Partial<Omit<Product, 'id' | 'createdAt' | 'updatedAt'>>,
+) => {
     return await prisma.product.update({
         where: { id },
         data,
@@ -29,7 +32,10 @@ export const deleteProduct = async (id: number) => {
     });
 };
 
-export const patchProduct = async (id: number, data: Partial<Omit<Product, 'id' | 'createdAt' | 'updatedAt'>>) => {
+export const patchProduct = async (
+    id: number,
+    data: Partial<Omit<Product, 'id' | 'createdAt' | 'updatedAt'>>,
+) => {
     return await prisma.product.update({
         where: { id },
         data,
