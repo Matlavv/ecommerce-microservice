@@ -6,6 +6,7 @@ import {
     updateProductHandler,
     patchProductHandler,
     deleteProductHandler,
+    getProductsByTagHandler
 } from '../controllers/product.controller';
 
 const router = express.Router();
@@ -126,5 +127,10 @@ router
     .put(updateProductHandler)
     .patch(patchProductHandler)
     .delete(deleteProductHandler);
+
+
+router
+    .route('/tag/:tag')
+    .get(getProductsByTagHandler);
 
 export default router;

@@ -6,6 +6,7 @@ import {
     getProductById,
     deleteProduct,
     patchProduct,
+    getProductsByTag
 } from '../services/product.service';
 
 export const createProductHandler = async (req: Request, res: Response) => {
@@ -62,3 +63,12 @@ export const patchProductHandler = async (req: Request, res: Response) => {
         res.status(500).json({ error: e });
     }
 };
+
+export const getProductsByTagHandler = async (req: Request, res: Response) => {
+    try {        
+        const products = await getProductsByTag(req.params.tag);
+        res.status(200).json(products);
+    } catch (e) {
+        res.status(500).json({ error: e });
+    }
+}

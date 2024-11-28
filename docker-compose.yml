@@ -7,7 +7,7 @@ services:
         container_name: api-gateway
         build:
             context: ./
-            dockerfile: ./backend/api-gateway/Dockerfile.dev
+            dockerfile: ./backend/api-gateway/Dockerfile.prod
         ports:
             - '3000:3000'
         environment:
@@ -16,7 +16,6 @@ services:
             - ./.env.dev
         volumes:
             - /home/node/app/node_modules
-            - ./backend/api-gateway:/home/node/app
         depends_on:
             - user-service
             - auth-service
@@ -30,7 +29,7 @@ services:
         container_name: user-service
         build:
             context: ./
-            dockerfile: ./backend/user-service/Dockerfile.dev
+            dockerfile: ./backend/user-service/Dockerfile.prod
         ports:
             - '${PORT_USER}:3001'
         environment:
@@ -41,7 +40,6 @@ services:
             - ./.env.dev
         volumes:
             - /home/node/app/node_modules
-            - ./backend/user-service:/home/node/app
         networks:
             - microservices-network
 
@@ -49,7 +47,7 @@ services:
         container_name: auth-service
         build:
             context: ./
-            dockerfile: ./backend/auth-service/docker/Dockerfile.dev
+            dockerfile: ./backend/auth-service/docker/Dockerfile.prod
         ports:
             - '3002:3002'
         env_file:
@@ -65,7 +63,7 @@ services:
         container_name: cart-service
         build:
             context: ./
-            dockerfile: ./backend/cart-service/Dockerfile.dev
+            dockerfile: ./backend/cart-service/Dockerfile.prod
         ports:
             - '3003:3003'
         environment:
@@ -74,7 +72,6 @@ services:
             - ./.env.dev
         volumes:
             - /home/node/app/node_modules
-            - ./backend/cart-service:/home/node/app
         networks:
             - microservices-network
 
@@ -82,14 +79,13 @@ services:
         container_name: payment-service
         build:
             context: ./
-            dockerfile: ./backend/payment-service/Dockerfile.dev
+            dockerfile: ./backend/payment-service/Dockerfile.prod
         ports:
             - '3005:3000'
         environment:
             DATABASE_URL: 'postgresql://ecommerce_owner:j3DWlwT8YqXC@ep-lively-lake-a2fgz6pc.eu-central-1.aws.neon.tech/ecommerce?sslmode=require'
         volumes:
             - /home/node/app/node_modules
-            - ./backend/payment-service:/home/node/app
         networks:
             - microservices-network
 
@@ -97,13 +93,12 @@ services:
         container_name: product-service
         build:
             context: ./
-            dockerfile: ./backend/product-service/Dockerfile.dev
+            dockerfile: ./backend/product-service/Dockerfile.prod
         ports:
             - '3004:3004'
         environment:
             DATABASE_URL: 'postgresql://product-service_owner:sbKMwXGO0P3g@ep-black-leaf-a2qcyjx5.eu-central-1.aws.neon.tech/product-service?sslmode=require'
         volumes:
             - /home/node/app/node_modules
-            - ./backend/product-service:/home/node/app
         networks:
             - microservices-network

@@ -137,6 +137,70 @@ export const addProductToCartService = async (
 
 };
 
+
+export const getCartSuggestsService = async (userId: number) => {
+    
+    const res = await fetch(`${process.env.CART_SERVICE_URL}/cart/users/${userId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    const products = await res.json();
+
+    if (!products) {
+        throw new Error(`Erreur lors de la récupération du panier.`);
+    }
+
+
+    const cartProducts = products.cartProducts;
+
+    const productDetails = await Promise.all(
+        cartProducts.map(async (cartProduct: CartProduct) => {
+            const res = await fetch(`${process.env.PRODUCT_SERVICE_URL}/products/${cartProduct.productId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const productDetail = await res.json();
+            return productDetail;
+        })
+    );
+
+
+    const tagCount: { [key: string]: number } = {};
+
+    productDetails.forEach((product) => {
+        if (product.tags) {
+            product.tags.forEach((tag: string) => {
+                if (tagCount[tag]) {
+                    tagCount[tag]++;
+                } else {
+                    tagCount[tag] = 1;
+                }
+            });
+        }
+    });
+
+    const mostUsedTag = Object.keys(tagCount).reduce((a, b) => (tagCount[a] > tagCount[b] ? a : b), '');
+
+    const suggestedProductsRes = await fetch(`${process.env.PRODUCT_SERVICE_URL}/products/tag/${mostUsedTag}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    const suggestedProducts = await suggestedProductsRes.json();
+
+    return {
+        status: 200,
+        mostUsedTag: mostUsedTag,
+        suggestedProducts: suggestedProducts,
+    };
+
+}
+
 export const updateProductQuantityInCartService = async (
     cartId: number,
     productId: number,
